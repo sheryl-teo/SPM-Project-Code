@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import staffCard from './components/staff-card/staff-card.styles';
+import staffCard from './components/HR and Manager/staff-card/staff-card.component';
 
 
 const App = () => {
@@ -9,7 +9,6 @@ const App = () => {
   const [staff] = useState([]);
 
 
-  const
 
 
 
@@ -25,7 +24,11 @@ const App = () => {
   return (
     <div className='=App'>
 
+      <h1 className='app-title'>HR and Manager</h1>
+
       
+
+        
 
 
     </div>
