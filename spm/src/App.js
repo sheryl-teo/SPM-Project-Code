@@ -1,50 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
-import { useEffect, useState } from 'react';
-import staffCard from './components/HR and Manager/staff-card/staff-card.component';
+import { useState, useEffect } from 'react';
 
+
+import CardList from './components/HR and Manager/staff-card-list/staff-card-list.component';
+import SearchBox from './components/HR and Manager/search-box/search-box.component';
+import './App.css';
 
 const App = () => {
-  const [searchField, setSearchFIeld] = useState('');
-  const [staff] = useState([]);
+  const [searchField, setSearchField] = useState('');
+  const [monsters, setMonsters] = useState([]);
+  const [filteredMonsters, setFilterMonsters] = useState(monsters);
 
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((users) => setMonsters(users));
+  }, []);
 
+  useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
 
+    setFilterMonsters(newFilteredMonsters);
+  }, [monsters, searchField]);
 
-
-  // for getting the data website
-  
-  // useEffect(() => {
-  //   fetch('link')
-  //     .then((response) => response.json())
-  //     .then((users) => setStaff(users));
-  // }, []);
-
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  };
 
   return (
-    <div className='=App'>
+    <div className='App'>
+      <h1 className='app-title'>Monsters Rolodex</h1>
 
-      <h1 className='app-title'>HR and Manager</h1>
-
-      
-
-        
-
-
+      <SearchBox
+        className='monsters-search-box'
+        onChangeHandler={onSearchChange}
+        placeholder='search monsters'
+      />
+      <CardList monsters={filteredMonsters} />
     </div>
-
   );
-
-
-
-
-
-
-
-
-
 };
-
-
 
 export default App;
