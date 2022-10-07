@@ -1,50 +1,22 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import { useEffect, useState } from 'react';
-import staffCard from './components/HR and Manager/staff-card/staff-card.component';
+import { BrowserRouter as Router, Routes, Route}
+	from 'react-router-dom';
+import Home from './components/home';
+import Profile from './components/Staff/profile/profile';
+import Staff from './components/Staff/staff_home';
+import LJCreationPage from './components/Staff/LJCreationPage/LJCreationPage';
 
-
-const App = () => {
-  const [searchField, setSearchFIeld] = useState('');
-  const [staff] = useState([]);
-
-
-
-
-
-  // for getting the data website
-  
-  // useEffect(() => {
-  //   fetch('link')
-  //     .then((response) => response.json())
-  //     .then((users) => setStaff(users));
-  // }, []);
-
-
-  return (
-    <div className='=App'>
-
-      <h1 className='app-title'>HR and Manager</h1>
-
-      
-
-        
-
-
-    </div>
-
-  );
-
-
-
-
-
-
-
-
-
-};
-
-
+function App() {
+return (
+	<Router>
+	<Routes>
+		<Route exact path='/' element={<Home />} />
+		<Route path="/staff" element={<Staff />} />
+		<Route path="/staff/learningjourneyCreation" element={<LJCreationPage />} />
+	</Routes>
+	</Router>
+);
+}
 
 export default App;
