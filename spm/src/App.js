@@ -10,6 +10,7 @@ const App = () => {
   const [monsters, setMonsters] = useState([]);
   const [filteredMonsters, setFilterMonsters] = useState(monsters);
 
+  // getting json api
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
@@ -31,12 +32,12 @@ const App = () => {
 
   return (
     <div className='App'>
-      <h1 className='app-title'>Monsters Rolodex</h1>
+      <h1 className='app-title'>Staffs</h1>
 
       <SearchBox
         className='monsters-search-box'
         onChangeHandler={onSearchChange}
-        placeholder='search monsters'
+        placeholder='search staff'
       />
       <CardList monsters={filteredMonsters} />
     </div>
