@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route}
 import Home from './components/home';
 import Profile from './components/Staff/profile/profile';
 import Staff from './components/Staff/staff_home';
-import LJCreationPage from './components/Staff/LJCreationPage/LJCreationPage';
+import LJCreationPage from './components/Staff/LJCreationPage/LJ_Creation_Page';
 
 function App() {
 return (
