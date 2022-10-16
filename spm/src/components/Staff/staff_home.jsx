@@ -1,8 +1,8 @@
-
+import "./staff_home.css";
 import React from 'react';
 import Profile from './profile/profile';
-import LearningJourney from './learning_journey/learningJourney';
-import "./staff_home.css";
+import LearningJourney from './learning_journey/learning_journey';
+
 
 
 const Staff = () => {
@@ -20,7 +20,7 @@ const Staff = () => {
 
       </div>
       <a href="/staff/learningjourneyCreation">
-        <img src="../../images/plus.png" alt="HTML tutorial"/>
+        <img src="plus.png" alt="Create Learning Journey"/>
       </a>
 
 
