@@ -21,9 +21,17 @@ def get_all_skill():
     "/skills/create",
     tags=["skills"],
     response_model=List[Skill],
-    description="Get a list of all skills",
+    description="Create a new skill.",
 )
 async def create_skill(skill: dict):
+    """Create a new skill.
+
+    Args:
+        skill (dict): JSON dictionary, containing Skill_ID and Skill_Name
+
+    Returns:
+        _type_: _description_
+    """
     statement = skills.insert([skill])
     return conn.execute(statement)
 
