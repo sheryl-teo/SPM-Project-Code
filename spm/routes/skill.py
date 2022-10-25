@@ -66,7 +66,7 @@ def read_skill_name(search_skill_name: str):
     """Reads a skill through a substring match search by skill name.
 
     Args:
-        search_skill_name (str): _description_
+        search_skill_name (str): The name of the skill being searched.
 
     Returns:
         _type_: _description_
@@ -92,6 +92,23 @@ async def update_skill(search_skill: dict):
         _type_: _description_
     """
     statement = skills.update().where(skills.c.Skill_ID==search_skill['Skill_ID']).values(Skill_Name=search_skill['Skill_Name'])
+    return conn.execute(statement)
+
+# Delete 
+@skill.get(
+    "/skills/delete/hard/{search_skill_ID}",
+    tags=["skills"],
+    response_model=List[Skill],
+    description="Hard delete an existing skill.",
+)
+def delete_skill_hard(search_skill_ID: str):
+    """Hard delete an existing skill.
+
+    Args:
+        search_skill_ID (str): Skill ID, following the format "SXX", 
+        with XX representing the skill number.
+    """
+    statement = skills.delete().where(skills.c.Skill_ID==search_skill_ID)
     return conn.execute(statement)
 
 # @skill.put(
