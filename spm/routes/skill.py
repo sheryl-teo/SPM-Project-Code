@@ -75,6 +75,25 @@ def read_skill_name(search_skill_name: str):
     statement = skills.select().where(func.lower(skills.c.Skill_Name).contains(search_skill_name))
     return conn.execute(statement).all()
 
+# Update 
+@skill.post(
+    "/skills/create",
+    tags=["skills"],
+    response_model=List[Skill],
+    description="Update an existing skill.",
+)
+async def update_skill(skill: dict):
+    """Update an existing skill.
+
+    Args:
+        skill (dict): JSON dictionary, containing Skill_ID and Skill_Name
+
+    Returns:
+        _type_: _description_
+    """
+    statement = skills.update([skill])
+    return conn.execute(statement)
+
 # @skill.put(
 #     "/delete_skill_course/{Skill_ID}{Course_ID}",
 #     tags=["delete_skill_course"],
