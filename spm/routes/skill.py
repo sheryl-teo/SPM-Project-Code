@@ -16,6 +16,17 @@ skill = APIRouter()
 def get_all_skill():
     return conn.execute(skills.select()).fetchall()
 
+# Create
+@skill.post(
+    "/skills/create",
+    tags=["skills"],
+    response_model=List[Skill],
+    description="Get a list of all skills",
+)
+async def create_skill(skill: dict):
+    statement = skills.insert([skill])
+    return conn.execute(statement)
+
 # Read 
 @skill.get(
     "/skills/read/id/{search_skill_ID}",
