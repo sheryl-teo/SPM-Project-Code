@@ -77,12 +77,12 @@ def read_skill_name(search_skill_name: str):
 
 # Update 
 @skill.post(
-    "/skills/create",
+    "/skills/update",
     tags=["skills"],
     response_model=List[Skill],
     description="Update an existing skill.",
 )
-async def update_skill(skill: dict):
+async def update_skill(search_skill: dict):
     """Update an existing skill.
 
     Args:
@@ -91,7 +91,7 @@ async def update_skill(skill: dict):
     Returns:
         _type_: _description_
     """
-    statement = skills.update([skill])
+    statement = skills.update().where(skills.c.Skill_ID==search_skill['Skill_ID']).values(Skill_Name=search_skill['Skill_Name'])
     return conn.execute(statement)
 
 # @skill.put(
