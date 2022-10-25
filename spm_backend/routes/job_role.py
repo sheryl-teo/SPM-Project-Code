@@ -31,6 +31,6 @@ def get_job_role_by_department(Job_Department: str):
     response_model=List[Job_role],
     description="Soft delete a specified job role",
 )
-def get_job_role_by_department(Job_Department: str):
+def soft_delete_job_role(Job_Role_ID: str):
     conn.execute(job_roles.update().where(job_roles.c.Job_Role_ID == Job_Role_ID).values(Job_Role_Status = "Retired"))
     return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == Job_Role_ID)).fetchall()
