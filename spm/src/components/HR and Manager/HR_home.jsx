@@ -1,23 +1,35 @@
-
+import { BrowserRouter as Router,Link } from 'react-router-dom';
 import React from 'react';
 
 
-function HR () {
+function HR() {
   return (
     <div>
-      <h1 className='header'>
-        Skills
-      </h1>
+      <a href="/Hr/Skills">
+        <h1 className='header'>
+          Skills
+        </h1>
+      </a>
 
-      <h1 className='header'>
-        Courses
-      </h1>
+      <a href="/Hr/Courses">
+        <h1 className='header'>
+          Courses
+        </h1>
+      </a>
 
-      <h1 className='header'>
-        Roles
-      </h1>
-      
-      
+      <a href="/Hr/Roles">
+        <h1 className='header'>
+          Roles
+        </h1>
+      </a>
+
+      <Link to="/">
+        <button type="button">
+          Back
+        </button>
+      </Link>
+
+
 
 
 
