@@ -6,8 +6,7 @@ job_role_skills = Table (
     "job_role_skill",
     meta,
     Column("Job_Role_ID" , String(5), primary_key= True ),
-    Column("SKill_ID" , String(5), primary_key = True ),
-    Column("soft_delete", Boolean),
+    Column("Skill_ID" , String(5), primary_key = True ),
     ForeignKeyConstraint(
         ["Job_Role_ID", "Skill_ID"], ["Job_Role.Job_Role_ID", "skill.Skill_ID"]
     ) 

@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 skill = APIRouter()
 
 @skill.get(
-    "/skills",
+    "/skills/get_all_skill",
     tags=["skills"],
     response_model=List[Skill],
     description="Get a list of all skills",
@@ -17,14 +17,13 @@ def get_all_skill():
     return conn.execute(skills.select()).fetchall()
 
 
-# @skill.put(
-#     "/delete_skill_course/{Skill_ID}{Course_ID}",
-#     tags=["delete_skill_course"],
-#     response_model=List[Skill],
-#     description="Soft delete a skill from a course",
-# )
-# def delete_skill_course(Skill_ID: str, soft_delete: bool):
-#     conn.execute(skills.update(
-#         soft_delete = skill.soft_delete
-#     ).where(skills.c.Skill_ID == "S2")).values(soft_delete=1)
-
+@skill.put(
+    "/skills/delete_skill/{Skill_ID}",
+    tags=["skills"],
+    response_model=List[Skill],
+    description="Delete a specified skill",
+)
+def delete_skill(Skill_ID: str):
+    conn.execute(skills.delete().where(skills.c.Skill_ID == Skill_ID))
+    return conn.execute(skills.select()).fetchall()
+    #need to include sub functions: delete_skill_course(), delete_job_role_skill(), delete_learning_journey_skill()
