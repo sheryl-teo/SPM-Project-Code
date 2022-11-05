@@ -6,5 +6,4 @@ engine = create_engine(DATABASE_URL)
 
 conn = engine.connect(close_with_result=False)
 session = sessionmaker(bind=engine)
-
 meta = MetaData()
