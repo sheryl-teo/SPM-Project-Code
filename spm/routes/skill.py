@@ -15,9 +15,7 @@ def error_1(search_skill_ID: str):
     if result_dict == []: 
         error_msg = {
             'Error_ID': 'S1', 
-            'Error_Desc': '''
-            The skill you're looking for is not inside our database. 
-            Check your search terms and try again.''',
+            'Error_Desc': '''The skill you're looking for is not inside our database. Check your search terms and try again.''',
             'Error_Details': ''
         }
     else: 
@@ -33,9 +31,7 @@ def error_2(search_skill_ID: str):
     if result_dict != []: 
         error_msg = {
             'Error_ID': 'S2', 
-            'Error_Desc': '''
-            This skill is already within our database.
-            Check your skill details and try again.''',
+            'Error_Desc': '''This skill is already within our database. Check your skill details and try again.''',
             'Error_Details': ''
         }
     else: 
@@ -56,9 +52,7 @@ def error_3(search_skill_ID: str):
     if letter_check == False or int_check == False:
         error_msg = {
             'Error_ID': 'S3', 
-            'Error_Desc': '''
-            This skill has an invalid skill ID. 
-            Check your skill ID and try again.''',
+            'Error_Desc': '''This skill has an invalid skill ID. Check your skill ID and try again.''',
             'Error_Details': ''
         }
     else: 
