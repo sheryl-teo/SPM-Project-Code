@@ -1,9 +1,10 @@
 # SPM-Project-Code
-SPM code
+SPM code 
+github repo link website - https://github.com/sheryl-teo/SPM-Project-Code
 
 # Running the code
-1. Run npm install --save
-2. Open the command terminal
+1. Open the command terminal
+2. Run npm install --save
 3. Run npm start
 
 # Fast api set up
