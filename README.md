@@ -12,4 +12,4 @@ SPM code
 3. run fastapi application
 ###  `uvicorn app:app --reload`
 4. go to this link on your browser
-###  `http://127.0.0.1:8000/docs#`
+###  `http://127.0.0.1:8000/docs#`  
