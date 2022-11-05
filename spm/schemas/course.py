@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Course(BaseModel):
+    Course_ID: str
     Course_Name: str
     Course_Desc: str
     Course_Status: str
@@ -9,5 +10,5 @@ class Course(BaseModel):
     Course_Category: str
 
 
-class CourseCount(BaseModel):
-    total: int
+# class CourseCount(BaseModel):
+#     total: int

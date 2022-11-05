@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Table
-from sqlalchemy.sql.sqltypes import Integer, String 
+from sqlalchemy.sql.sqltypes import Integer, String, Boolean
 from config.db import meta
 
 skills = Table(
@@ -7,6 +7,6 @@ skills = Table(
      meta,
     Column("Skill_ID", String(5), primary_key=True),
     Column("Skill_Name", String(50)),
-    Column("Active", Integer)
+    Column("Active", Integer),
 )
 
