@@ -1,0 +1,9 @@
+
+.skills .indivSkills {
+    border: 1px solid black;
+    color:black;
+    padding:2rem;
+    width:20rem;
+    border-radius: 20px;
+    margin:20px;
+}
