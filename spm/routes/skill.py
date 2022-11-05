@@ -7,6 +7,61 @@ from sqlalchemy import func, select
 
 skill = APIRouter()
 
+def error_1(search_skill_ID: str):
+    search = skills.select().where(skills.c.Skill_ID==search_skill_ID)
+
+    if search is None: 
+        error_msg = {
+            'Error_ID': 'S1', 
+            'Error_Desc': '''
+            The skill you're looking for is not inside our database. 
+            Check your search terms and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    
+    return error_msg 
+
+def error_2(search_skill_ID: str):
+    search = skills.select().where(skills.c.Skill_ID==search_skill_ID)
+
+    if search != None: 
+        error_msg = {
+            'Error_ID': 'S2', 
+            'Error_Desc': '''
+            This skill is already within our database.
+            Check your skill details and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    
+    return error_msg 
+
+def can_convert_to_int(string: str):
+    try:
+        int(string)
+        return True
+    except ValueError:
+        return False
+
+def error_3(search_skill_ID: str):
+    letter_check = search_skill_ID[0] == 'S'
+    int_check = can_convert_to_int(search_skill_ID[1:])
+    if letter_check == False or int_check == False:
+        error_msg = {
+            'Error_ID': 'S3', 
+            'Error_Desc': '''
+            This skill has an invalid skill ID. 
+            Check your skill ID and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    return error_msg 
+
+
 @skill.get(
     "/skills",
     tags=["skills"],
@@ -20,7 +75,7 @@ def get_all_skill():
 @skill.post(
     "/skills/create",
     tags=["skills"],
-    response_model=List[Skill],
+    # response_model=List[Skill],
     description="Create a new skill.",
 )
 async def create_skill(skill: dict):
@@ -32,14 +87,21 @@ async def create_skill(skill: dict):
     Returns:
         _type_: _description_
     """
-    statement = skills.insert([skill])
-    return conn.execute(statement)
+    skill['Skill_ID'] = skill['Skill_ID'].capitalize()
+    search_skill_ID = skill['Skill_ID']
+    errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = skills.insert([skill])
+        return conn.execute(statement)
+    else:
+        return {'errors': errors_list}
 
 # Read 
 @skill.get(
     "/skills/read/id/{search_skill_ID}",
     tags=["skills"],
-    response_model=List[Skill],
+    # response_model=List[Skill],
     description="Reads a skill through an exact match search by skill ID.",
 )
 def read_skill_id(search_skill_ID: str):
@@ -52,9 +114,17 @@ def read_skill_id(search_skill_ID: str):
     Returns:
         _type_: _description_
     """
-    search_skill_ID = search_skill_ID.upper()
-    statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)
-    return conn.execute(statement).all()
+    skill['Skill_ID'] = skill['Skill_ID'].capitalize()
+    search_skill_ID = skill['Skill_ID']
+
+    errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)
+        return conn.execute(statement).all()
+    else:
+        return {'errors': errors_list}
+
 
 @skill.get(
     "/skills/read/name/{search_skill_name}",
