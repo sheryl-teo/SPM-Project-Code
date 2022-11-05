@@ -2,9 +2,9 @@
 SPM code
 
 # Running the code
-Step 1.Run npm install --save 
-Step 2.Open the command terminal 
-Step 3.npm start
+1. Run npm install --save
+2. Open the command terminal
+3. Run npm start
 
 # Fast api set up
 ## Executed using Command Prompt in VSCode Terminal 
