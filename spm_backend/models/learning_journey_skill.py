@@ -8,9 +8,9 @@ learning_journey_skills = Table(
     Column("Learning_Journey_ID", String(5), primary_key=True),
     Column("Skill_ID",String(5),primary_key = True),  
     Column("Obtained",Boolean),
-    ForeignKeyConstraint(
-        ["Learning_Journey_ID", "Skill_ID"], ["learning_Journey.Learning_Journey_ID", "skill.Skill_ID"]
-    ) 
+    # ForeignKeyConstraint(
+    #     ["Learning_Journey_ID"], ["learning_Journey.Learning_Journey_ID"], name = "fk_learning_journey"
+    # ) 
 )
 
 
