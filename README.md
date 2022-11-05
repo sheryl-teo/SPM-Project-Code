@@ -5,7 +5,8 @@ github repo link website - https://github.com/sheryl-teo/SPM-Project-Code
 # Running the code
 1. Open the command terminal
 2. Run npm install --save
-3. Run npm start
+3. npm install --save @chakra-ui/react
+4. Run npm start
 
 # Fast api set up
 ## Executed using Command Prompt in VSCode Terminal 
