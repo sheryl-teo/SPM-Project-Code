@@ -70,6 +70,17 @@ def error_4(search_skill_name: str):
         error_msg = None
     return error_msg 
 
+def error_5(search_skill_name: str):
+    if len(search_skill_name) > 50:
+        error_msg = {
+            'Error_ID': 'S5', 
+            'Error_Desc': '''This skill is too long (more than 50 characters). Check your skill name and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    return error_msg 
+
 
 @skill.get(
     "/skills",
@@ -97,8 +108,9 @@ async def create_skill(skill: Skill):
     """
     skill.Skill_ID = skill.Skill_ID.capitalize()
     search_skill_ID = skill.Skill_ID
+    search_skill_name = skill.Skill_Name
 
-    errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
+    errors = [error_2(search_skill_ID), error_3(search_skill_ID), error_4(search_skill_name), error_5(search_skill_name)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         statement = skills.insert().values(
@@ -106,7 +118,7 @@ async def create_skill(skill: Skill):
             Skill_Name = skill.Skill_Name
         )
         conn.execute(statement)
-        return conn.execute(skill.select().where(skills.c.Skill_ID == skill.Skill_ID)).fetchall()
+        return conn.execute(skills.select().where(skills.c.Skill_ID == skill.Skill_ID)).fetchall()
     else:
         return {'errors': errors_list}
 
@@ -171,14 +183,19 @@ async def update_skill(search_skill: Skill):
     Returns:
         _type_: _description_
     """
-    search_skill_ID = search_skill.Skill_ID.capitalize()
+    search_skill.Skill_ID = search_skill.Skill_ID.capitalize()
+    search_skill_ID = search_skill.Skill_ID
     search_skill_name = search_skill.Skill_Name
 
-    errors = [error_1(search_skill_ID), error_3(search_skill_ID), error_4(search_skill_name)]
+    errors = [error_1(search_skill_ID), error_3(search_skill_ID), error_4(search_skill_name), error_5(search_skill_name)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)
-        return conn.execute(statement).all()
+        statement = skills.update().values(
+            Skill_ID = search_skill.Skill_ID,
+            Skill_Name = search_skill.Skill_Name
+        ).where(skills.c.Skill_ID==search_skill_ID)
+        conn.execute(statement)
+        return conn.execute(skills.select().where(skills.c.Skill_ID == search_skill.Skill_ID)).fetchall()
     else:
         return {'errors': errors_list}
 
@@ -195,8 +212,17 @@ def delete_skill_hard(search_skill_ID: str):
         search_skill_ID (str): Skill ID, following the format "SXX", 
         with XX representing the skill number.
     """
-    statement = skills.delete().where(skills.c.Skill_ID==search_skill_ID)
-    return conn.execute(statement)
+    search_skill_ID = search_skill_ID.capitalize()
+
+
+    errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = skills.delete().where(skills.c.Skill_ID==search_skill_ID)
+        return conn.execute(statement)
+    else:
+        return {'errors': errors_list}
+
 
 # @skill.put(
 #     "/delete_skill_course/{Skill_ID}{Course_ID}",

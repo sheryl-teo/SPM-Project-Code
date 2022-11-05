@@ -18,22 +18,22 @@ from app import app
 
 client = TestClient(app)
 
-def testcreatejobrole():
-    response = client.post(
-        "/job_role/create_job_role",
-        json={
-            "Job_Role_ID": "JR111",
-            "Job_Role_Name": "string",
-            "Job_Department": "string"
-            })
-    assert response.status_code == 200
-    assert response.json() == [
-            {
-                "Job_Role_ID": "JR111",
-                "Job_Role_Name": "string",
-                "Job_Department": "string"
-            }
-            ]
+# def testcreatejobrole():
+#     response = client.post(
+#         "/job_role/create_job_role",
+#         json={
+#             "Job_Role_ID": "JR111",
+#             "Job_Role_Name": "string",
+#             "Job_Department": "string"
+#             })
+#     assert response.status_code == 200
+#     assert response.json() == [
+#             {
+#                 "Job_Role_ID": "JR111",
+#                 "Job_Role_Name": "string",
+#                 "Job_Department": "string"
+#             }
+#             ]
 
 # Skills 
 
@@ -41,8 +41,8 @@ def testcreatejobrole():
 def test_create_skill_1():
     """Happy Path
     """
-    response = client.post(
-        "/skills/create",
+    test_setup = client.get("/skills/delete/hard/S88")
+    response = client.post("/skills/create",
         json = {
             "Skill_ID": "S88",
             "Skill_Name": "Test Skill 88"
@@ -55,8 +55,6 @@ def test_create_skill_1():
             "Skill_Name": "Test Skill 88"
         }
     ]
-
-    # Delete test 
 
 def test_create_skill_2():
     """Error: Skill ID already exists
@@ -100,9 +98,12 @@ def test_create_skill_3():
         ]
     }
 
+
 def test_create_skill_4():
     """Valid Skill ID: First Letter Lowercase S
     """
+    test_setup = client.get("/skills/delete/hard/S88")
+
     response = client.post(
         "/skills/create",
         json = {
@@ -117,10 +118,11 @@ def test_create_skill_4():
             "Skill_Name": "Test Skill 88"
         }
     ]
+    
 
 
 def test_create_skill_5():
-    """Error: Invalid Skill Name - No Skill Name
+    """Error: Valid Skill ID: Identifying section not numbers
     """
     response = client.post(
         "/skills/create",
@@ -135,6 +137,52 @@ def test_create_skill_5():
             {
                 "Error_ID": "S3",
                 "Error_Desc": "This skill has an invalid skill ID. Check your skill ID and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+def test_create_skill_6():
+    """Error: Invalid Skill Name - Empty name
+    """
+    test_setup = client.get("/skills/delete/hard/S88")
+
+    response = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": ""
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+    "errors": [
+        {
+            "Error_ID": "S4",
+            "Error_Desc": "This skill does not have a skill name. Check your skill name and try again.",
+            "Error_Details": ""
+        }
+    ]
+}
+
+def test_create_skill_7():
+    """Invalid Skill Name - More than 50 characters
+    """
+    test_setup = client.get("/skills/delete/hard/S88")
+
+    response = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+            {
+                "Error_ID": "S5",
+                "Error_Desc": "This skill is too long (more than 50 characters). Check your skill name and try again.",
                 "Error_Details": ""
             }
         ]
@@ -336,8 +384,16 @@ def test_read_skill_skillName_9():
 def test_update_skill_1():
     """Happy Path
     """
-    response = client.post(
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+    test_setup_1 = client.post(
         "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88"
+        }
+    )
+    response = client.post(
+        "/skills/update",
         json = {
             "Skill_ID": "S88",
             "Skill_Name": "Test Skill 88 Updated"
@@ -350,6 +406,8 @@ def test_update_skill_1():
             "Skill_Name": "Test Skill 88 Updated"
         }
     ]
+
+    
 
 
 def test_update_skill_2():
@@ -376,6 +434,17 @@ def test_update_skill_2():
 def test_update_skill_3():
     """Valid Path: No change
     """
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+
+    test_setup_1 = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+
+    )
+
     response = client.post(
         "/skills/update",
         json = {
@@ -391,34 +460,56 @@ def test_update_skill_3():
             "Skill_Name": "Test Skill 88 Updated"
         }
     ]
+
+    
 
 def test_update_skill_4():
     """Valid Skill ID: First Letter Lowercase S
     """
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+
+    test_setup_1 = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+
     response = client.post(
         "/skills/update",
         json = {
             "Skill_ID": "s88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated 2"
         }
     )
     assert response.status_code == 200
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated 2"
         }
     ]
 
+    
 
 def test_update_skill_5():
     """Error: Invalid Skill Name - Empty name
     """
-    response = client.post(
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+    test_setup_1 = client.post(
         "/skills/create",
         json = {
-            "Skill_ID": "STU",
-            "Skill_Name": "Test Skill TU"
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": ""
         }
     )
     assert response.status_code == 200
@@ -431,3 +522,133 @@ def test_update_skill_5():
                 }
             ]
         }
+
+    
+
+def test_update_skill_6():
+    """Error: Invalid Skill Name - More than 50 characters
+    """
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+    test_setup_1 = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+                {
+                    'Error_ID': 'S5', 
+                    'Error_Desc': '''This skill is too long (more than 50 characters). Check your skill name and try again.''',
+                    'Error_Details': ''
+                }
+            ]
+        }
+
+    
+
+# Delete 
+def test_delete_skill_1():
+    """Happy path
+    """
+    test_setup = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+
+    response = client.get("skills/delete/hard/S88")
+    assert response.status_code == 200
+    assert response.json() == {}
+
+def test_delete_skill_2():
+    """Error: Skill ID does not exist
+    """
+    response = client.get("skills/delete/hard/S99")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+                {
+                    "Error_ID": "S1",
+                    "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                    "Error_Details": ""
+                }
+            ]
+        }
+
+def test_delete_skill_3():
+    """Valid Skill ID: First Letter Lowercase S
+    """
+    test_setup = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+
+    test_setup = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88"
+        }
+    )
+    response = client.get("skills/delete/hard/s88")
+    assert response.status_code == 200
+    assert response.json() == {}
+
+def test_delete_skill_4():
+    """Error: Invalid Skill ID - First Letter Not S
+    """
+    response = client.get("skills/delete/hard/C11")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+            {
+                "Error_ID": "S1",
+                "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                "Error_Details": ""
+            },
+            {
+                "Error_ID": "S3",
+                "Error_Desc": "This skill has an invalid skill ID. Check your skill ID and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+
+def test_delete_skill_5():
+    """Error: Valid Skill ID: Identifying section not numbers
+    """
+    response = client.get("skills/delete/hard/STU")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+            {
+                "Error_ID": "S1",
+                "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                "Error_Details": ""
+            },
+            {
+                "Error_ID": "S3",
+                "Error_Desc": "This skill has an invalid skill ID. Check your skill ID and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+
