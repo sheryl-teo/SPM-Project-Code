@@ -29,7 +29,7 @@ b) ```venv\scripts\activate```
 ```uvicorn app:app --reload```
 If you encounter any error after running this code, do check your directory
 
-4. go to this link on your browser
+5. go to this link on your browser
 ###  `http://127.0.0.1:8000/docs#` 
 
 # Integration Testing
