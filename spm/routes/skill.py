@@ -9,8 +9,10 @@ skill = APIRouter()
 
 def error_1(search_skill_ID: str):
     search = skills.select().where(skills.c.Skill_ID==search_skill_ID)
-
-    if search is None: 
+    result = conn.execute(search)
+    result_dict = result.mappings().all()
+    print('result_dict', result_dict)
+    if result_dict == []: 
         error_msg = {
             'Error_ID': 'S1', 
             'Error_Desc': '''
@@ -25,8 +27,10 @@ def error_1(search_skill_ID: str):
 
 def error_2(search_skill_ID: str):
     search = skills.select().where(skills.c.Skill_ID==search_skill_ID)
+    result = conn.execute(search)
+    result_dict = result.mappings().all()
 
-    if search != None: 
+    if result_dict != []: 
         error_msg = {
             'Error_ID': 'S2', 
             'Error_Desc': '''
@@ -75,10 +79,9 @@ def get_all_skill():
 @skill.post(
     "/skills/create",
     tags=["skills"],
-    # response_model=List[Skill],
     description="Create a new skill.",
 )
-async def create_skill(skill: dict):
+async def create_skill(skill: Skill):
     """Create a new skill.
 
     Args:
@@ -87,13 +90,18 @@ async def create_skill(skill: dict):
     Returns:
         _type_: _description_
     """
-    skill['Skill_ID'] = skill['Skill_ID'].capitalize()
-    search_skill_ID = skill['Skill_ID']
+    skill.Skill_ID = skill.Skill_ID.capitalize()
+    search_skill_ID = skill.Skill_ID
+
     errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        statement = skills.insert([skill])
-        return conn.execute(statement)
+        statement = skills.insert().values(
+            Skill_ID = skill.Skill_ID,
+            Skill_Name = skill.Skill_Name
+        )
+        conn.execute(statement)
+        return conn.execute(skill.select().where(skills.c.Skill_ID == skill.Skill_ID)).fetchall()
     else:
         return {'errors': errors_list}
 
@@ -101,7 +109,6 @@ async def create_skill(skill: dict):
 @skill.get(
     "/skills/read/id/{search_skill_ID}",
     tags=["skills"],
-    # response_model=List[Skill],
     description="Reads a skill through an exact match search by skill ID.",
 )
 def read_skill_id(search_skill_ID: str):
@@ -114,10 +121,10 @@ def read_skill_id(search_skill_ID: str):
     Returns:
         _type_: _description_
     """
-    skill['Skill_ID'] = skill['Skill_ID'].capitalize()
-    search_skill_ID = skill['Skill_ID']
+    search_skill_ID = search_skill_ID.capitalize()
 
     errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
+    print('errors', errors)
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)
@@ -129,7 +136,6 @@ def read_skill_id(search_skill_ID: str):
 @skill.get(
     "/skills/read/name/{search_skill_name}",
     tags=["skills"],
-    response_model=List[Skill],
     description="Reads a skill through a substring match search by skill name.",
 )
 def read_skill_name(search_skill_name: str):
@@ -149,10 +155,9 @@ def read_skill_name(search_skill_name: str):
 @skill.post(
     "/skills/update",
     tags=["skills"],
-    response_model=List[Skill],
     description="Update an existing skill.",
 )
-async def update_skill(search_skill: dict):
+async def update_skill(search_skill: Skill):
     """Update an existing skill.
 
     Args:
@@ -161,14 +166,20 @@ async def update_skill(search_skill: dict):
     Returns:
         _type_: _description_
     """
-    statement = skills.update().where(skills.c.Skill_ID==search_skill['Skill_ID']).values(Skill_Name=search_skill['Skill_Name'])
-    return conn.execute(statement)
+    search_skill_ID = search_skill_ID.capitalize()
+
+    errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)
+        return conn.execute(statement).all()
+    else:
+        return {'errors': errors_list}
 
 # Delete 
 @skill.get(
     "/skills/delete/hard/{search_skill_ID}",
     tags=["skills"],
-    response_model=List[Skill],
     description="Hard delete an existing skill.",
 )
 def delete_skill_hard(search_skill_ID: str):
