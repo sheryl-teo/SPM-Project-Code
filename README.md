@@ -4,25 +4,42 @@ github repo link website - https://github.com/sheryl-teo/SPM-Project-Code
 
 # Running the code
 1. Open the command terminal
-2. Run npm install --save
-3. npm install --save @chakra-ui/react
-4. Run npm start
+2. Run ```npm install --save```
+3. ```npm install --save @chakra-ui/react```
+4. ```Run npm start```
 
 # Fast api set up
 ## Executed using Command Prompt in VSCode Terminal 
-0. go to spm_backend
-### `cd spm_backend`
-1. create virtual environment
-### a)  `python -m venv venv`
-### b) `venv\scripts\activate`
-2. download required packages
-###  `pip install -r requirements.txt`
-3. run fastapi application
-###  `uvicorn app:app --reload`
+1. go to spm_backend
+
+```cd spm_backend```
+
+2. create virtual environment
+
+a) ```python -m venv venv```
+
+b) ```venv\scripts\activate```
+
+3. download required packages
+
+```pip install -r requirements.txt```
+
+4. run fastapi application
+
+```uvicorn app:app --reload```
 If you encounter any error after running this code, do check your directory
 
 4. go to this link on your browser
-###  `http://127.0.0.1:8000/docs#`  
+###  `http://127.0.0.1:8000/docs#` 
+
+# Integration Testing
+### Click on the following link 'https://fastapi.tiangolo.com/tutorial/testing/' for more information regarding the commands for integration testing
+1. Open the terminal
+2. To use TestClient, first you install request with ``` pip install request ```
+3. Import TestClient 
+4. The functions can be identified as those with a name that starts with test_ , which is standard pytest conventions).
+5. Next, you install pytest with ``` pip install pytest ``` if you have not done so
+6. Run the test with ``` pytest ``` , it will detect the files and tests automatically, execute them, and report the results back to you.
 
 # Circle Contineous Integration
 1. Click on the following link 'https://app.circleci.com/launchpad/invited?return-to=https%3A%2F%2Fapp.circleci.com%2Fpipelines%2Fgithub%2Fsheryl-teo%2FSPM-Project-Code%3Finvite%3Dtrue&inviter=174a54c0-5833-44df-9375-54678647f3aa&invitePage=pipelines ' 
