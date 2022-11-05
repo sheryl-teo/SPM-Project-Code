@@ -5,7 +5,7 @@ from routes.job_role import job_role
 # from routes.course_soft_delete import course_soft_delete
 # from routes.skill_course import skill_course
 from routes.learning_journey import learning_journey
-# from routes.staff import staff
+from routes.staff import staff
 
 app = FastAPI(
     debug = True,
@@ -19,5 +19,5 @@ app.include_router(job_role)
 app.include_router(learning_journey)
 # app.include_router(course_soft_delete)
 # app.include_router(skill_course)
-# app.include_router(staff)
+app.include_router(staff)
 
