@@ -12,6 +12,7 @@
 #         self.assertEqual(s.job_department,"Finance")
 #         s.create_job_role(job_role_id, job_role_name, job_department)
 #         self.assertEqual()
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from app import app
@@ -45,14 +46,16 @@ def test_create_skill_1():
     response = client.post("/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     )
     assert response.status_code == 200
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     ]
 
@@ -63,7 +66,8 @@ def test_create_skill_2():
         "/skills/create",
         json = {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -84,7 +88,8 @@ def test_create_skill_3():
         "/skills/create",
         json = {
             "Skill_ID": "C88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -108,14 +113,16 @@ def test_create_skill_4():
         "/skills/create",
         json = {
             "Skill_ID": "s88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     )
     assert response.status_code == 200
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88", 
+            "Active": 1
         }
     ]
     
@@ -128,7 +135,8 @@ def test_create_skill_5():
         "/skills/create",
         json = {
             "Skill_ID": "STU",
-            "Skill_Name": "Test Skill TU"
+            "Skill_Name": "Test Skill TU",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -151,7 +159,8 @@ def test_create_skill_6():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": ""
+            "Skill_Name": "",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -174,7 +183,8 @@ def test_create_skill_7():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated"
+            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -197,7 +207,8 @@ def test_read_skill_skillID_1():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -244,7 +255,8 @@ def test_read_skill_skillID_4():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -268,6 +280,20 @@ def test_read_skill_SkillID_5():
     ]
 }
 
+def test_read_skill_SkillID_6():
+    """Valid: Inactive skill
+    """
+    response = client.get("/skills/read/id/S24")
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S24",
+            "Skill_Name": "Open platforms communication",
+            "Active": 0
+        }
+    ]
+
+
 def test_read_skill_skillName_1():
     """Happy Path: Complete string match
     """
@@ -276,7 +302,8 @@ def test_read_skill_skillName_1():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -288,7 +315,8 @@ def test_read_skill_skillName_2():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -300,7 +328,8 @@ def test_read_skill_skillName_3():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -312,7 +341,8 @@ def test_read_skill_skillName_4():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -324,7 +354,8 @@ def test_read_skill_skillName_5():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -336,7 +367,8 @@ def test_read_skill_skillName_6():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -348,7 +380,8 @@ def test_read_skill_skillName_7():
     assert response.json() == [
         {
             "Skill_ID": "S11",
-            "Skill_Name": "Data analysis"
+            "Skill_Name": "Data analysis",
+            "Active": 1
         }
     ]
 
@@ -360,15 +393,18 @@ def test_read_skill_skillName_8():
     assert response.json() == [
         {
             "Skill_ID": "S15",
-            "Skill_Name": "Innovative thinking"
+            "Skill_Name": "Innovative thinking",
+            "Active": 1
         },
         {
             "Skill_ID": "S19",
-            "Skill_Name": "System thinking"
+            "Skill_Name": "System thinking",
+            "Active": 1
         },
         {
             "Skill_ID": "S20",
-            "Skill_Name": "Strategic thinking"
+            "Skill_Name": "Strategic thinking",
+            "Active": 1
         }
     ]
 
@@ -380,6 +416,20 @@ def test_read_skill_skillName_9():
     assert response.json() == [
     ]
 
+def test_read_skill_skillName_10():
+    """Valid: Inactive skill
+    """
+    response = client.get("/skills/read/name/Open platforms communication")
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S24",
+            "Skill_Name": "Open platforms communication",
+            "Active": 0
+        }
+    ]
+
+
 # Update 
 def test_update_skill_1():
     """Happy Path
@@ -389,21 +439,24 @@ def test_update_skill_1():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     )
     response = client.post(
         "/skills/update",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
     assert response.status_code == 200
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     ]
 
@@ -417,7 +470,8 @@ def test_update_skill_2():
         "/skills/update",
         json = {
             "Skill_ID": "S99",
-            "Skill_Name": "Test Skill 99 Updated"
+            "Skill_Name": "Test Skill 99 Updated",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -440,7 +494,8 @@ def test_update_skill_3():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
 
     )
@@ -449,7 +504,8 @@ def test_update_skill_3():
         "/skills/update",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
 
     )
@@ -457,7 +513,8 @@ def test_update_skill_3():
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     ]
 
@@ -472,7 +529,8 @@ def test_update_skill_4():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
 
@@ -480,14 +538,16 @@ def test_update_skill_4():
         "/skills/update",
         json = {
             "Skill_ID": "s88",
-            "Skill_Name": "Test Skill 88 Updated 2"
+            "Skill_Name": "Test Skill 88 Updated 2",
+            "Active": 1
         }
     )
     assert response.status_code == 200
     assert response.json() == [
         {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated 2"
+            "Skill_Name": "Test Skill 88 Updated 2",
+            "Active": 1
         }
     ]
 
@@ -501,7 +561,8 @@ def test_update_skill_5():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
 
@@ -509,7 +570,8 @@ def test_update_skill_5():
         "/skills/update",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": ""
+            "Skill_Name": "",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -533,7 +595,8 @@ def test_update_skill_6():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
 
@@ -541,7 +604,8 @@ def test_update_skill_6():
         "/skills/update",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated"
+            "Skill_Name": "Test Skill 88 Updated Updated Updated Updated Updated Updated",
+            "Active": 1
         }
     )
     assert response.status_code == 200
@@ -555,6 +619,36 @@ def test_update_skill_6():
             ]
         }
 
+def test_update_skill_7():
+    """Valid: Change skill active status
+    """
+    test_setup_0 = client.get("/skills/delete/hard/S88")
+    test_setup_1 = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
+        }
+    )
+
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 0
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 0
+        }
+    ]
+
     
 
 # Delete 
@@ -565,7 +659,8 @@ def test_delete_skill_1():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
 
@@ -595,7 +690,8 @@ def test_delete_skill_3():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88 Updated"
+            "Skill_Name": "Test Skill 88 Updated",
+            "Active": 1
         }
     )
 
@@ -603,7 +699,8 @@ def test_delete_skill_3():
         "/skills/create",
         json = {
             "Skill_ID": "S88",
-            "Skill_Name": "Test Skill 88"
+            "Skill_Name": "Test Skill 88",
+            "Active": 1
         }
     )
     response = client.get("skills/delete/hard/s88")

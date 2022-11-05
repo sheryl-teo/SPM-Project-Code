@@ -115,7 +115,8 @@ async def create_skill(skill: Skill):
     if len(errors_list) == 0:
         statement = skills.insert().values(
             Skill_ID = skill.Skill_ID,
-            Skill_Name = skill.Skill_Name
+            Skill_Name = skill.Skill_Name,
+            Active = skill.Active
         )
         conn.execute(statement)
         return conn.execute(skills.select().where(skills.c.Skill_ID == skill.Skill_ID)).fetchall()
@@ -192,7 +193,8 @@ async def update_skill(search_skill: Skill):
     if len(errors_list) == 0:
         statement = skills.update().values(
             Skill_ID = search_skill.Skill_ID,
-            Skill_Name = search_skill.Skill_Name
+            Skill_Name = search_skill.Skill_Name,
+            Active = search_skill.Active
         ).where(skills.c.Skill_ID==search_skill_ID)
         conn.execute(statement)
         return conn.execute(skills.select().where(skills.c.Skill_ID == search_skill.Skill_ID)).fetchall()
