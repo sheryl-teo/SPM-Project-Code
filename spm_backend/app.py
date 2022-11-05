@@ -5,15 +5,10 @@ from routes.job_role import job_role
 from routes.job_role_skill import job_role_skill
 # from routes.course_soft_delete import course_soft_delete
 # from routes.skill_course import skill_course
-<<<<<<< Updated upstream
-# from routes.learning_journey import learning_journey
-# from routes.staff import staff
 from fastapi.middleware.cors import CORSMiddleware
-=======
 from routes.learning_journey import learning_journey
 from routes.staff import staff
 from routes.role import role
->>>>>>> Stashed changes
 
 app = FastAPI(
     debug = True,
@@ -24,7 +19,6 @@ app = FastAPI(
 app.include_router(course)
 app.include_router(skill)
 app.include_router(job_role)
-<<<<<<< Updated upstream
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,11 +31,9 @@ app.add_middleware(
 
 
 # app.include_router(job_role_skill)
-=======
 app.include_router(learning_journey)
 app.include_router(role)
 app.include_router(job_role_skill)
->>>>>>> Stashed changes
 # app.include_router(course_soft_delete)
 # app.include_router(skill_course)
 app.include_router(staff)

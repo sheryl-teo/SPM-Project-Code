@@ -6,7 +6,6 @@ from schemas.learning_journey import Learning_journey
 from models.learning_journey import learning_journeys
 from typing import List
 from sqlalchemy import func, select
-from schemas.index import Job_role
 
 job_role = APIRouter()
 
