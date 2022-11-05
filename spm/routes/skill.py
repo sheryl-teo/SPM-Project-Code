@@ -59,6 +59,17 @@ def error_3(search_skill_ID: str):
         error_msg = None
     return error_msg 
 
+def error_4(search_skill_name: str):
+    if len(search_skill_name) <= 0:
+        error_msg = {
+            'Error_ID': 'S4', 
+            'Error_Desc': '''This skill does not have a skill name. Check your skill name and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    return error_msg 
+
 
 @skill.get(
     "/skills",
@@ -160,9 +171,10 @@ async def update_skill(search_skill: Skill):
     Returns:
         _type_: _description_
     """
-    search_skill_ID = search_skill_ID.capitalize()
+    search_skill_ID = search_skill.Skill_ID.capitalize()
+    search_skill_name = search_skill.Skill_Name
 
-    errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
+    errors = [error_1(search_skill_ID), error_3(search_skill_ID), error_4(search_skill_name)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         statement = skills.select().where(skills.c.Skill_ID==search_skill_ID)

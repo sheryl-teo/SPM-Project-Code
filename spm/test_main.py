@@ -118,10 +118,9 @@ def test_create_skill_4():
         }
     ]
 
-    # Delete test
 
 def test_create_skill_5():
-    """Error: Invalid Skill ID - Following characters not numbers 
+    """Error: Invalid Skill Name - No Skill Name
     """
     response = client.post(
         "/skills/create",
@@ -332,3 +331,103 @@ def test_read_skill_skillName_9():
     assert response.status_code == 200
     assert response.json() == [
     ]
+
+# Update 
+def test_update_skill_1():
+    """Happy Path
+    """
+    response = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    ]
+
+
+def test_update_skill_2():
+    """Error: Skill ID does not exist
+    """
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "S99",
+            "Skill_Name": "Test Skill 99 Updated"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+    "errors": [
+            {
+                "Error_ID": "S1",
+                "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+def test_update_skill_3():
+    """Valid Path: No change
+    """
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+
+    )
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    ]
+
+def test_update_skill_4():
+    """Valid Skill ID: First Letter Lowercase S
+    """
+    response = client.post(
+        "/skills/update",
+        json = {
+            "Skill_ID": "s88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "Skill_ID": "S88",
+            "Skill_Name": "Test Skill 88 Updated"
+        }
+    ]
+
+
+def test_update_skill_5():
+    """Error: Invalid Skill Name - Empty name
+    """
+    response = client.post(
+        "/skills/create",
+        json = {
+            "Skill_ID": "STU",
+            "Skill_Name": "Test Skill TU"
+        }
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+                {
+                    "Error_ID": "S4",
+                    "Error_Desc": "This skill does not have a skill name. Check your skill name and try again.",
+                    "Error_Details": ""
+                }
+            ]
+        }
