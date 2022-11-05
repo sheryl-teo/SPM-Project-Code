@@ -69,6 +69,18 @@ form {
     color: grey;
 }
 
+.creation .jobSkills {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+}
 
+.creation button :hover{
+    border:1px solid black;
+}
 
-
+.indivSkills {
+    border: 1px solid black;
+}
