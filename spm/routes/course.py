@@ -19,10 +19,21 @@ def get_all_courses():
     return conn.execute(courses.select()).fetchall()
 
 @course.get(
-    "/courses/get_course_detail/{Course_ID}", 
+    "/courses/get_course_by_id/{Course_ID}", 
     tags=["courses"], 
     response_model=List[Course],
-    description="Get details of a course",
+    description="Get details of a course by id",
 )
-def get_course_detail(Course_ID:str):
+def get_course_by_id(Course_ID:str):
     return conn.execute(courses.select().where(courses.c.Course_ID == Course_ID)).fetchall()
+
+@course.get(
+    "/courses/get_course_by_name/{search_course_name}", 
+    tags=["courses"], 
+    description="Get details of a course by name",
+)
+def get_course_by_name(search_course_name:str):
+    search_course_name = search_course_name.lower()
+    statement = courses.select().where(func.lower(courses.c.Course_Name).contains(search_course_name))
+    return conn.execute(statement).fetchall()
+
