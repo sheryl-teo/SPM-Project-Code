@@ -48,7 +48,6 @@ async def create_jobrole_skill(jobrole_skill: Job_role_skill):
         return {'errors': errors_list}
 
 # Read 
-
 @jobrole_skill.get(
     "/jobrole_skills/read/jobrole/{search_jobrole}",
     tags=["skill_courses"],
@@ -78,11 +77,11 @@ def get_skill_course(search_skill: str):
     else:
         return {'errors': errors_list}
 
-# Soft delete course skill relationship
+# Soft delete 
 @jobrole_skill.post(
     "/jobrole_skills/delete/soft",
     tags=["skills"],
-    description="Soft delete skill course relationship.",
+    description="Soft delete job role skill relationship.",
 )
 async def update_soft_delete(jobrole_skill: Job_role_skill):
     jobrole_skill['Job_Role_ID'] = jobrole_skill['Job_Role_ID'].upper()
@@ -97,6 +96,28 @@ async def update_soft_delete(jobrole_skill: Job_role_skill):
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         statement = job_role_skills.update().where(job_role_skills.c.Skill_ID==jobrole_skill['Skill_ID'] & job_role_skills.c.Job_Role_ID==jobrole_skill['Job_Role_ID']).values(Active=jobrole_skill['Active'])
+        conn.execute(statement)
+    else:
+        return {'errors': errors_list}
+
+# Hard delete
+@jobrole_skill.post(
+    "/jobrole_skills/delete/hard",
+    tags=["skills"],
+    description="Hard delete job role skill relationship.",
+)
+async def update_soft_delete(jobrole_skill: Job_role_skill):
+    jobrole_skill['Job_Role_ID'] = jobrole_skill['Job_Role_ID'].upper()
+    jobrole_skill['Skill_ID'] = jobrole_skill['Skill_ID'].upper()
+
+    # Error handling: 
+    search_jobrole_ID = jobrole_skill['Job_Role_ID']
+    search_skill_ID = jobrole_skill['Skill_ID']
+
+    errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID), skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = job_role_skills.delete().where(job_role_skills.c.Skill_ID==jobrole_skill['Skill_ID'] & job_role_skills.c.Job_Role_ID==jobrole_skill['Job_Role_ID'])
         conn.execute(statement)
     else:
         return {'errors': errors_list}
