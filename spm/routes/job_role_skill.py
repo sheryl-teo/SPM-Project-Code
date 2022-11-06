@@ -61,16 +61,32 @@ def get_by_skill_id(Skill_ID: str):
     description="Delete/undelete a job role skill row",
 )
 def delete(jrs: Job_role_skill):
-    # soft delete/undelete a job role skill row by changing the active value
+    # soft delete a job role skill row by changing the active value
     # active = 0(retired)
+    conn.execute(job_role_skills.update().values(
+        Job_Role_ID = jrs.Job_Role_ID,
+        Skill_ID = jrs.Skill_ID,
+        Active = 0
+    ).where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))) 
+    #return updated job_role_skill
+    return conn.execute(job_role_skills.select().where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))).fetchall()
+
+@job_role_skill.put(
+    "/job_roles_skill/undelete",
+    tags=["job_role_skills"],
+    description="Delete/undelete a job role skill row",
+)
+def undelete(jrs: Job_role_skill):
+    # soft undelete a job role skill row by changing the active value
     # active = 1(active)
     conn.execute(job_role_skills.update().values(
         Job_Role_ID = jrs.Job_Role_ID,
         Skill_ID = jrs.Skill_ID,
-        Active = jrs.Active
+        Active = 1
     ).where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))) 
-    #return updated list of job_role_skill
-    return conn.execute(job_role_skills.select()).fetchall()
+    #return updated  job_role_skill
+    return conn.execute(job_role_skills.select().where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))).fetchall()
+
 
 
 

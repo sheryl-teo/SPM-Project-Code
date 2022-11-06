@@ -71,7 +71,7 @@ def update_learning_journey(ljourney: Learning_journey):
 
 
 @learning_journey.put(
-    "/learning_journey/delete",
+    "/learning_journey/delete/{Learning_Journey_ID}",
     tags=["learning_journeys"],
     description="Delete a learning journey",
 )
