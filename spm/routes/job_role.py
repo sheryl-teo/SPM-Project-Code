@@ -63,25 +63,39 @@ def update(job: Job_role):
     return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == job.Job_Role_ID)).fetchall()
 
 @job_role.put(
-    "/job_roles/delete",
+    "/job_roles/delete/{Job_Role_ID}",
     tags=["job_roles"],
-    description="Soft delete/undelete a specified job role",
+    description="Soft delete a specified job role",
 )
-def delete(jr: Job_role):
-    #soft delete/undelete a job role row by changing the active value
+def delete(Job_Role_ID: str):
+    #soft delete a job role row by changing the active value
     # active = 0(retired)
-    # active = 1(active)
     conn.execute(job_roles.update().values(
-        Job_Role_ID = jr.Job_Role_ID,
-        Job_Role_Name = jr.Job_Role_Name,
-        Job_Department = jr.Job_Department,
-        Active = jr.Active
-    ).where(job_roles.c.Job_Role_ID == jr.Job_Role_ID))
-    #soft delete/undelete a job role skill row by changing the active value
+        Active = 0
+    ).where(job_roles.c.Job_Role_ID == Job_Role_ID))
+    #soft delete a job role skill row by changing the active value
     #when a job role is retired, the job role skills are retired as well
     conn.execute(job_role_skills.update().values(
-        Active = jr.Active
-    ).where(job_role_skills.c.Job_Role_ID == jr.Job_Role_ID))
-    #return deleted/undeleted job role
-    return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == jr.Job_Role_ID)).fetchall()
+        Active = 0
+    ).where(job_role_skills.c.Job_Role_ID == Job_Role_ID))
+    #return deleted job role
+    return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == Job_Role_ID)).fetchall()
 
+@job_role.put(
+    "/job_roles/undelete/{Job_Role_ID}",
+    tags=["job_roles"],
+    description="Soft undelete a specified job role",
+)
+def undelete(Job_Role_ID: str):
+    #soft undelete a job role row by changing the active value
+    # active = 1(active)
+    conn.execute(job_roles.update().values(
+        Active = 1
+    ).where(job_roles.c.Job_Role_ID == Job_Role_ID))
+    #soft undelete a job role skill row by changing the active value
+    #when a job role is active, the job role skills are active as well
+    conn.execute(job_role_skills.update().values(
+        Active = 1
+    ).where(job_role_skills.c.Job_Role_ID == Job_Role_ID))
+    #return undeleted job role
+    return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == Job_Role_ID)).fetchall()
