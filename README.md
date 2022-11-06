@@ -6,7 +6,9 @@ github repo link website - https://github.com/sheryl-teo/SPM-Project-Code
 1. Open the command terminal
 2. Run ```npm install --save```
 3. ```npm install --save @chakra-ui/react``` 
-  a) ``` if there is react router dom error, run npm install react-router-dom --save.``` 
+
+a) ``` if there is react router dom error, run npm install react-router-dom --save.``` 
+  
 4. ```Run npm start```
 
 # Fast api set up
