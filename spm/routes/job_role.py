@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from config.db import conn
 from schemas.job_role import Job_role
-from schemas.job_role_skill import Job_role_skill
 from models.job_role import job_roles
+from schemas.job_role_skill import Job_role_skill
 from models.job_role_skill import job_role_skills
 from schemas.learning_journey import Learning_journey
 from models.learning_journey import learning_journeys
@@ -11,6 +11,10 @@ from sqlalchemy import func, select
 
 job_role = APIRouter()
 
+
+#####################################
+#error handling
+#####################################
 def error_1(search_jobrole_ID: str):
     search = job_roles.select().where(job_roles.c.Job_Role_ID==search_jobrole_ID)
     result = conn.execute(search)
@@ -62,7 +66,7 @@ def error_3(search_jobrole_ID: str):
         }
     else: 
         error_msg = None
-    return error_msg 
+    return error_msg
 
 def error_4(search_jobrole_name: str):
     if len(search_jobrole_name) <= 0:
@@ -116,6 +120,11 @@ def error_6(search_jobrole_dept: str):
 
 
     return error_msg if is_error else None
+#####################################
+#error handling
+#####################################
+
+
 
 @job_role.get(
     "/jobroles/",
@@ -129,11 +138,11 @@ def get_all_jobrole():
 # Create
 @job_role.post(
     "/jobroles/create",
-    tags=["jobroles"],
+    tags=["job_roles"],
     description="Create a job role",
 )
 def create_jobrole(job: Job_role):
-    job.Job_Role_ID = job.Job_Role_ID.upper()
+    job.Job_Role_ID = job.Job_Role_ID.capitalize()
     search_jobrole_ID = job.Job_Role_ID
     search_jobrole_name = job.Job_Role_Name
     search_jobrole_dept = job.Job_Department
@@ -143,7 +152,7 @@ def create_jobrole(job: Job_role):
 
     if len(errors_list) == 0:
         conn.execute(job_roles.insert().values(
-            Job_Role_ID = job.Job_Role_ID,
+            Job_Role_ID = job.Job_Role_ID.capitalize(),
             Job_Role_Name = job.Job_Role_Name,
             Job_Department = job.Job_Department,
             Active = job.Active
@@ -219,8 +228,8 @@ async def update_jobrole(job: Job_role):
     else:
         return {'errors': errors_list}
 
-# Delete 
-@job_role.get(
+# Soft delete 
+@job_role.post(
     "/jobroles/delete/soft/{search_jobrole_ID}",
     tags=["job_roles"],
     description="Soft delete a specified job role",
@@ -238,22 +247,24 @@ def delete_jobrole_soft(search_jobrole_ID: str):
         conn.execute(jobrole_statement)
 
         # Job role skill
-        jobrole_skill_statement = job_role_skills.update().values(
+        job_role_skill_statement = job_role_skills.update().values(
             Active = 0
         ).where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
-        conn.execute(jobrole_skill_statement)
+        conn.execute(job_role_skill_statement)
         
+        #return deleted job role
         return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == search_jobrole_ID)).fetchall()
 
     else:
         return {'errors': errors_list}
 
-@job_role.get(
+# Soft undelete
+@job_role.post(
     "/jobroles/delete/softrestore/{search_jobrole_ID}",
     tags=["job_roles"],
-    description="Soft delete a specified job role",
+    description="Soft undelete a specified job role",
 )
-def delete_jobrole_soft(search_jobrole_ID: str):
+def delete_jobrole_softrestore(search_jobrole_ID: str):
     search_jobrole_ID = search_jobrole_ID.upper()
     errors = [error_1(search_jobrole_ID), error_3(search_jobrole_ID)]
     errors_list = [e for e in errors if e != None]
@@ -266,10 +277,10 @@ def delete_jobrole_soft(search_jobrole_ID: str):
         conn.execute(jobrole_statement)
 
         # Job role skill
-        jobrole_skill_statement = job_role_skills.update().values(
+        job_role_skill_statement = job_role_skills.update().values(
             Active = 1
         ).where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
-        conn.execute(jobrole_skill_statement)
+        conn.execute(job_role_skill_statement)
         
         return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == search_jobrole_ID)).fetchall()
         
@@ -288,8 +299,8 @@ def delete_jobrole_soft(search_jobrole_ID: str):
 
 #     if len(errors_list) == 0:
 #         # Job role skill
-#         jobrole_skill_statement = job_role_skills.delete().where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
-#         conn.execute(jobrole_skill_statement)
+#         job_role_skill_statement = job_role_skills.delete().where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
+#         conn.execute(job_role_skill_statement)
 
 #         # Job role 
 #         jobrole_statement = job_roles.delete().where(job_roles.c.Job_Role_ID==search_jobrole_ID)
