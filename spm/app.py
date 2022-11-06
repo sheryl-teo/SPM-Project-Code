@@ -7,6 +7,8 @@ from routes.job_role_skill import job_role_skill
 # from routes.skill_course import skill_course
 from routes.learning_journey import learning_journey
 from routes.staff import staff
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     debug = True,
@@ -23,3 +25,10 @@ app.include_router(job_role_skill)
 # app.include_router(skill_course)
 app.include_router(staff)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
