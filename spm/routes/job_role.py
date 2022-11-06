@@ -15,7 +15,6 @@ job_role = APIRouter()
 @job_role.post(
     "/job_role/create",
     tags=["job_roles"],
-    response_model=List[Job_role],
     description="Create a job role",
 )
 def create(job: Job_role):
@@ -31,7 +30,6 @@ def create(job: Job_role):
     
     "/job_roles/get_job_roles",
     tags=["job_roles"],
-    response_model=List[Job_role],
     description="Get a list of all job roles details",
 )
 def get_job_roles():
@@ -40,7 +38,6 @@ def get_job_roles():
 @job_role.get(
     "/job_roles/get_job_role_by_department/{Job_Department}",
     tags=["job_roles"],
-    response_model=List[Job_role],
     description="Get a list of job roles by department",
 )
 def get_job_role_by_department(Job_Department: str):
@@ -50,7 +47,6 @@ def get_job_role_by_department(Job_Department: str):
 @job_role.put(
     "/job_roles/update/{Job_Role_ID}",
     tags=["job_roles"],
-    response_model=List[Job_role],
     description="Update a specified job role",
 )
 def update(job: Job_role):
@@ -61,21 +57,20 @@ def update(job: Job_role):
     return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == job.Job_Role_ID)).fetchall()
 
 @job_role.put(
-    "/job_roles/delete/{Job_Role_ID}",
+    "/job_roles/delete",
     tags=["job_roles"],
     description="Soft delete/undelete a specified job role",
 )
-def delete(Job_Role_ID: str, Active: int):
+def delete(jr: Job_role):
     conn.execute(job_roles.update().values(
-        Active = Active
-    ).where(job_roles.c.Job_Role_ID == Job_Role_ID))
+        Job_Role_ID = jr.Job_Role_ID,
+        Job_Role_Name = jr.Job_Role_Name,
+        Job_Department = jr.Job_Department,
+        Active = jr.Active
+    ).where(job_roles.c.Job_Role_ID == jr.Job_Role_ID))
     conn.execute(job_role_skills.update().values(
-        Active = Active
-    ).where(job_role_skills.c.Job_Role_ID == Job_Role_ID))
+        Active = jr.Active
+    ).where(job_role_skills.c.Job_Role_ID == jr.Job_Role_ID))
 
-    # j = job_roles.join(job_role_skills, job_roles.c.Job_Role_ID == job_role_skills.c.Job_Role_ID)
-    # stmt = select([job_roles]).select_from(j)
-    # return conn.execute(stmt).fetchall
-
-    return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == Job_Role_ID)).fetchall()
+    return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == jr.Job_Role_ID)).fetchall()
 
