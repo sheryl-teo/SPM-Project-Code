@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import {
     Box,
+    Select,
     Button,
     Flex,
     Input,
@@ -28,12 +29,14 @@ function TodoHelper({ Role_Name,Department, id, fetchCourseList }) {
                     <Flex align="end">
                         <UpdateTodo Role_Name = {Role_Name} Department ={Department} id={id} fetchCourseList={fetchCourseList} />
                         <DeleteTodo Role_Name = {Role_Name} Department ={Department} id={id} fetchCourseList={fetchCourseList}/>
+                        <UndoDeleteTodo Role_Name = {Role_Name} Department ={Department} id={id} fetchCourseList={fetchCourseList}/>
                     </Flex>
                 </Text>
             </Flex>
         </Box>
     )
 }
+
 
 // Fetching Course List Data
 const CourseListContext = React.createContext({
@@ -62,6 +65,8 @@ export default function JobList() {
         fetchJobAssignment()
     }, [])
 
+    console.log(JobAssignment)
+    
     const JobAssignmentList={}
     
     JobAssignment.map((JobAssignment)=>{
@@ -99,16 +104,14 @@ export default function JobList() {
             <h1><b><u>Roles Available</u></b></h1>
             <ol>
                 <AddCourses />
-                {CourseList.map((CourseList) => (
-                    // if(CourseList.Job_Role_ID in JobAssignmentList){
 
-                    // }
-                    // else{
-                    //     const skills='-'
-                    // }
+                <AssignSkills/>
+
+                {CourseList.map((CourseList) => (
+           
                     <>
                         
-                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b> Status:<b>{CourseList.Active}</b> Skills Required: {CourseList.Skills}</li>
+                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b> Status: <b>{CourseList.Active}</b> Skills Required: {CourseList.Skills}</li>
                         <TodoHelper Role_Name={CourseList.Job_Role_Name} Department = {CourseList.Job_Department} id={CourseList.Job_Role_ID} fetchCourseList={fetchCourseList} /> <br></br>
                     </>
             ))}
@@ -150,7 +153,7 @@ function AddCourses() {
         }
         // console.log(newCourses)
         fetch("http://127.0.0.1:8000/job_role/create",
-            {
+            {   
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newCourses)
@@ -218,6 +221,7 @@ function UpdateTodo({ Role_Name, Department, id }) {
 
     const updateTodo = async () => {
         await fetch(`http://127.0.0.1:8000/job_roles/update/`+ id, {
+            
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({"Job_Role_ID":todo1,"Job_Role_Name": todo2 , "Job_Department":todo3, "Active":1})
@@ -286,7 +290,9 @@ function DeleteTodo({Role_Name, Department, id}) {
     const {fetchCourseList} = React.useContext(CourseListContext)
   
     const deleteTodo = async () => {
-      await fetch(`http://127.0.0.1:8000/job_roles/delete/${id}`, {
+        http://127.0.0.1:8000/job_roles/delete/JR101?Active=0
+      await fetch(`http://127.0.0.1:8000/job_roles/delete/${id}?Active=0`, {
+        
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: { "Job_Role_ID":id,"Job_Role_Name": Role_Name , "Job_Department":Department, "Active":0}
@@ -299,5 +305,127 @@ function DeleteTodo({Role_Name, Department, id}) {
     )
   }
 
+  function UndoDeleteTodo({Role_Name, Department, id}) {
+    // console.log(id)
+    const {fetchCourseList} = React.useContext(CourseListContext)
+  
+    const undodeleteTodo = async () => {
+        await fetch(`http://127.0.0.1:8000/job_roles/update/`+ id, {
+            
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({"Job_Role_ID":id,"Job_Role_Name": Role_Name , "Job_Department":Department, "Active":1})
+        })
+      
+      await fetchCourseList()
+    }
+  
+    return (
+      <Button h="1.5rem" size="sm" onClick={undodeleteTodo}>Undo Delete Role</Button>
+    )
+  }
 
-   
+  
+  function AssignSkills() {
+    
+    const [item1, setItem1] = React.useState("")
+    const [item2, setItem2] = React.useState("")
+
+
+    const { Courses, fetchCourseList } = React.useContext(CourseListContext)
+
+    const [Roles, setRoles] = useState([])
+
+    const fetchRoles = async () => {
+        const response = await fetch("http://127.0.0.1:8000/job_roles/get_job_roles")
+        const Roles = await response.json()
+        const RoleList=[]
+        Roles.map((Roles)=>{
+            RoleList.push(Roles.Job_Role_ID)
+        })
+        setRoles(RoleList)
+    }
+    useEffect(() => {
+        fetchRoles()
+    }, [])
+
+    const [Skills, setSkills] = useState([])
+
+    const fetchSkills = async () => {
+        const response = await fetch("http://127.0.0.1:8000/skills")
+        const Skills = await response.json()
+        const SkillList=[]
+        Skills.map((Skills)=>{
+            SkillList.push(Skills.Skill_ID)
+        })
+        setSkills(SkillList)
+    }
+    useEffect(() => {
+        fetchSkills()
+    }, [])
+    
+
+
+    // const handleInput1 = event => {
+    //     setItem1(event.target.value)
+    // }
+
+    const handleInput2 = event => {
+        setItem2(event.target.value)
+    }
+
+    const handleSubmit = (event) => {
+        const selectRole = document.getElementById('select')
+        const selectSkill = document.getElementById('select1')
+        const newCourses = {
+            "Job_Role_ID": selectRole,
+            "Skill_ID": selectSkill,
+            'Active':1
+        }
+        // console.log(newCourses)
+        fetch("http://127.0.0.1:8000/job_role_skill/create",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newCourses)
+            }).then(fetchCourseList)
+    }
+
+    return (
+        <>
+        
+        <form>
+        <p><b><u>Skills Assignment</u></b></p>
+            <InputGroup size="md">
+                <Select id='select' placeholder='Select Role ID'>
+                {Roles.map((Roles) => (
+                    <option value ={Roles}>{Roles}</option>
+                ))}
+
+                </Select>    
+                          
+            </InputGroup>
+            <br></br>
+            <InputGroup size="md">
+                
+            <Select id='select1' placeholder='Select Skill ID'>
+                {Skills.map((Skills) => (
+                    <option value ={Skills}>{Skills}</option>
+                ))}
+
+                </Select>    
+            </InputGroup>
+
+<br></br>
+             <InputGroup size="md">
+                <Input
+                    type='submit'
+                    onClick={handleSubmit} />
+
+            </InputGroup>
+
+
+        </form>
+        </>
+    )
+}
