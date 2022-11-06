@@ -91,7 +91,6 @@ export default function JobList() {
     })
 
    
-    console.log(CourseList)
 
     return (
 
@@ -109,7 +108,7 @@ export default function JobList() {
                     // }
                     <>
                         
-                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b> Skills Required: {CourseList.Skills}</li>
+                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b> Status:<b>{CourseList.Active}</b> Skills Required: {CourseList.Skills}</li>
                         <TodoHelper Role_Name={CourseList.Job_Role_Name} Department = {CourseList.Job_Department} id={CourseList.Job_Role_ID} fetchCourseList={fetchCourseList} /> <br></br>
                     </>
             ))}
@@ -145,10 +144,12 @@ function AddCourses() {
         const newCourses = {
             "Job_Role_ID": item1,
             "Job_Role_Name": item2,
-            "Job_Department": item3
+            "Job_Department": item3,
+            'Active':1
+            
         }
         // console.log(newCourses)
-        fetch("http://127.0.0.1:8000/job_role/create_job_role",
+        fetch("http://127.0.0.1:8000/job_role/create",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -214,16 +215,12 @@ function UpdateTodo({ Role_Name, Department, id }) {
     const [todo2, setTodo2] = useState(Role_Name)
     const [todo3, setTodo3] = useState(Department)
     const { fetchCourseList } = React.useContext(CourseListContext)
-    // const UpdatedCourses = {
-    //     "Job_Role_ID": todo1,
-    //     "Job_Role_Name": todo2,
-    //     "Job_Department": todo3
-    // }
+
     const updateTodo = async () => {
-        await fetch(`http://127.0.0.1:8000/job_roles/update_job_role/`+ id, {
+        await fetch(`http://127.0.0.1:8000/job_roles/update/`+ id, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({"Job_Role_ID":todo1,"Job_Role_Name": todo2 , "Job_Department":todo3})
+            body: JSON.stringify({"Job_Role_ID":todo1,"Job_Role_Name": todo2 , "Job_Department":todo3, "Active":1})
         })
         // console.log(todo1)
         onClose()
@@ -289,10 +286,10 @@ function DeleteTodo({Role_Name, Department, id}) {
     const {fetchCourseList} = React.useContext(CourseListContext)
   
     const deleteTodo = async () => {
-      await fetch(`http://127.0.0.1:8000/job_roles/delete_job_role/${id}`, {
+      await fetch(`http://127.0.0.1:8000/job_roles/delete/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: { "Job_Role_ID":id,"Job_Role_Name": Role_Name , "Job_Department":Department }
+        body: { "Job_Role_ID":id,"Job_Role_Name": Role_Name , "Job_Department":Department, "Active":0}
       })
       await fetchCourseList()
     }
