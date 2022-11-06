@@ -16,6 +16,7 @@ course = APIRouter()
     description="Get a list of all courses",
 )
 def get_all_courses():
+    #get all courses
     return conn.execute(courses.select()).fetchall()
 
 @course.get(
@@ -25,6 +26,7 @@ def get_all_courses():
     description="Get details of a course by id",
 )
 def get_course_by_id(Course_ID:str):
+    #get a single course by ID
     return conn.execute(courses.select().where(courses.c.Course_ID == Course_ID)).fetchall()
 
 @course.get(
@@ -35,5 +37,7 @@ def get_course_by_id(Course_ID:str):
 def get_course_by_name(search_course_name:str):
     search_course_name = search_course_name.lower()
     statement = courses.select().where(func.lower(courses.c.Course_Name).contains(search_course_name))
+    #get a single course by name
+    #name can be partially written or fully written
     return conn.execute(statement).fetchall()
 

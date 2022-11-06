@@ -13,11 +13,14 @@ job_role_skill = APIRouter()
     description="Assign skills to a job role, returns the skills a job role has",
 )
 def create(job_skill: Job_role_skill):
+    #create new job role skil
+    #happens when a new job role is created
     conn.execute(job_role_skills.insert().values(
         Job_Role_ID = job_skill.Job_Role_ID,
         Skill_ID = job_skill.Skill_ID,
         Active = job_skill.Active
     )) 
+    #return all skills pertaining to the job role
     return conn.execute(job_role_skills.select().where(job_role_skills.c.Job_Role_ID == job_skill.Job_Role_ID)).fetchall()
 
 @job_role_skill.get(
@@ -26,6 +29,7 @@ def create(job_skill: Job_role_skill):
     description="Get all job role skills",
 )
 def get_job_role_skill():
+    #get all job role skill in db
     return conn.execute(job_role_skills.select()).fetchall()
 
 
@@ -35,7 +39,10 @@ def get_job_role_skill():
     description="Get a list of all skills of a job role",
 )
 def get_by_jr_id(Job_Role_ID: str):
+    #get all skills pertaining to a job role
     return conn.execute(job_role_skills.select().where(job_role_skills.c.Job_Role_ID == Job_Role_ID)).fetchall()
+
+
 
 @job_role_skill.get(
     "/job_role_skill/get_by_skill_id/{Skill_ID}",
@@ -43,7 +50,38 @@ def get_by_jr_id(Job_Role_ID: str):
     description="Get a list of all job role a skill belongs to",
 )
 def get_by_skill_id(Skill_ID: str):
+    #get all job roles pertaining to a skill
     return conn.execute(job_role_skills.select().where(job_role_skills.c.Skill_ID == Skill_ID)).fetchall()
+
+
+
+@job_role_skill.put(
+    "/job_roles_skill/delete",
+    tags=["job_role_skills"],
+    description="Delete/undelete a job role skill row",
+)
+def delete(jrs: Job_role_skill):
+    # soft delete/undelete a job role skill row by changing the active value
+    # active = 0(retired)
+    # active = 1(active)
+    conn.execute(job_role_skills.update().values(
+        Job_Role_ID = jrs.Job_Role_ID,
+        Skill_ID = jrs.Skill_ID,
+        Active = jrs.Active
+    ).where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))) 
+    #return updated list of job_role_skill
+    return conn.execute(job_role_skills.select()).fetchall()
+
+
+
+# errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
+# errors_list = [e for e in errors if e != None]
+# if len(errors_list) == 0:
+#     statement = skills.insert([skill])
+#     return conn.execute(statement)
+# else:
+#     return {'errors': errors_list}
+
 
 
 # @job_role_skill.put(
@@ -67,30 +105,5 @@ def get_by_skill_id(Skill_ID: str):
 #         Active = Active
 #     ).where(job_role_skills.c.Skill_ID == Skill_ID)) 
 #     return conn.execute(job_role_skills.select().where(job_role_skills.c.Skill_ID == Skill_ID)).fetchall()
-
-
-@job_role_skill.put(
-    "/job_roles_skill/delete_job_role_skill",
-    tags=["job_role_skills"],
-    description="Delete a specified job role skill",
-)
-def delete_job_role_skill(jrs: Job_role_skill):
-    conn.execute(job_role_skills.update().values(
-        Job_Role_ID = jrs.Job_Role_ID,
-        Skill_ID = jrs.Skill_ID,
-        Active = jrs.Active
-    ).where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))) 
-    return conn.execute(job_role_skills.select().where((job_role_skills.c.Skill_ID == jrs.Skill_ID) & (job_role_skills.c.Job_Role_ID == jrs.Job_Role_ID))).fetchall()
-
-
-
-# errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
-# errors_list = [e for e in errors if e != None]
-# if len(errors_list) == 0:
-#     statement = skills.insert([skill])
-#     return conn.execute(statement)
-# else:
-#     return {'errors': errors_list}
-
 
     

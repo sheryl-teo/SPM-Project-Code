@@ -18,12 +18,15 @@ job_role = APIRouter()
     description="Create a job role",
 )
 def create(job: Job_role):
+    #create new job role
+    #when new job role is created, skills pertaining to this job role should also be added into job_role_skill table
     conn.execute(job_roles.insert().values(
         Job_Role_ID = job.Job_Role_ID,
         Job_Role_Name = job.Job_Role_Name,
         Job_Department = job.Job_Department,
         Active = job.Active
-))
+    ))
+    #return created job role
     return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == job.Job_Role_ID)).fetchall()
 
 @job_role.get(
@@ -33,6 +36,7 @@ def create(job: Job_role):
     description="Get a list of all job roles details",
 )
 def get_job_roles():
+    #return all job roles in db
     return conn.execute(job_roles.select()).fetchall()
 
 @job_role.get(
@@ -41,6 +45,8 @@ def get_job_roles():
     description="Get a list of job roles by department",
 )
 def get_job_role_by_department(Job_Department: str):
+    #return all job roles in a department
+    #departments are Chairman, CEO, Ops, Finance, Sales, HR
     return conn.execute(job_roles.select().where(job_roles.c.Job_Department == Job_Department)).fetchall()
 
 
@@ -62,15 +68,20 @@ def update(job: Job_role):
     description="Soft delete/undelete a specified job role",
 )
 def delete(jr: Job_role):
+    #soft delete/undelete a job role row by changing the active value
+    # active = 0(retired)
+    # active = 1(active)
     conn.execute(job_roles.update().values(
         Job_Role_ID = jr.Job_Role_ID,
         Job_Role_Name = jr.Job_Role_Name,
         Job_Department = jr.Job_Department,
         Active = jr.Active
     ).where(job_roles.c.Job_Role_ID == jr.Job_Role_ID))
+    #soft delete/undelete a job role skill row by changing the active value
+    #when a job role is retired, the job role skills are retired as well
     conn.execute(job_role_skills.update().values(
         Active = jr.Active
     ).where(job_role_skills.c.Job_Role_ID == jr.Job_Role_ID))
-
+    #return deleted/undeleted job role
     return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == jr.Job_Role_ID)).fetchall()
 

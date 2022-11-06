@@ -95,7 +95,7 @@ async def update_skill(search_skill: dict):
     return conn.execute(statement)
 
 # @skill.put(
-#     "/delete_skill_course/{Skill_ID}{Course_ID}",
+#     "/delete_skill_course",
 #     tags=["delete_skill_course"],
 #     response_model=List[Skill],
 #     description="Soft delete a skill from a course",
