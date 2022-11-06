@@ -1,7 +1,7 @@
 import "./staff_home.css";
 import React from 'react';
 import Profile from './profile/profile';
-import IndivLearningJourney from './indiv_learning_journey/learning_journey';
+import Details from "./details/details";
 
 
 
@@ -15,12 +15,12 @@ const Staff = () => {
 
         <div id="container">
           <div id="firstColumn"><Profile></Profile></div>
-          <div id="secondColumn"><IndivLearningJourney></IndivLearningJourney></div>
+          <div id="secondColumn"><Details></Details></div>
         </div>
 
       </div>
       <a href="/staff/learningjourneyCreation">
-        <img src="plus.png" alt="Create Learning Journey"/>
+        Create Learning Journey
       </a>
 
 
