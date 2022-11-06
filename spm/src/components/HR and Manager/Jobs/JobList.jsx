@@ -52,6 +52,47 @@ export default function JobList() {
     }, [])
 
 
+    const [JobAssignment, setJobAssignment] = useState([])
+    const fetchJobAssignment = async () => {
+        const response = await fetch("http://127.0.0.1:8000/job_role_skill/get_job_role_skill/")
+        const JobAssignment = await response.json()
+        setJobAssignment(JobAssignment)
+    }
+    useEffect(() => {
+        fetchJobAssignment()
+    }, [])
+
+    const JobAssignmentList={}
+    
+    JobAssignment.map((JobAssignment)=>{
+        if(JobAssignment.Job_Role_ID in JobAssignmentList){
+        const skills = JobAssignment.Skill_ID +' '
+        JobAssignmentList[JobAssignment.Job_Role_ID].push(skills)
+
+        }
+
+        else{
+        const skills = JobAssignment.Skill_ID +' '
+        JobAssignmentList[JobAssignment.Job_Role_ID]=[skills]
+        }
+   
+    })
+
+    CourseList.map((Course)=>{
+        if(Course.Job_Role_ID in JobAssignmentList){
+            Course['Skills']=JobAssignmentList[Course.Job_Role_ID]
+
+        }
+
+        else{
+            Course['Skills']='-'
+        }
+   
+    })
+
+   
+    console.log(CourseList)
+
     return (
 
         <CourseListContext.Provider value={{ CourseList, fetchCourseList }}>
@@ -60,12 +101,18 @@ export default function JobList() {
             <ol>
                 <AddCourses />
                 {CourseList.map((CourseList) => (
+                    // if(CourseList.Job_Role_ID in JobAssignmentList){
+
+                    // }
+                    // else{
+                    //     const skills='-'
+                    // }
                     <>
                         
-                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b></li>
+                        <li>Role ID: <b>{CourseList.Job_Role_ID}</b> Role Name: <b>{CourseList.Job_Role_Name}</b> Department: <b>{CourseList.Job_Department}</b> Skills Required: {CourseList.Skills}</li>
                         <TodoHelper Role_Name={CourseList.Job_Role_Name} Department = {CourseList.Job_Department} id={CourseList.Job_Role_ID} fetchCourseList={fetchCourseList} /> <br></br>
                     </>
-                ))}
+            ))}
             </ol>
 
         </CourseListContext.Provider>
@@ -100,7 +147,7 @@ function AddCourses() {
             "Job_Role_Name": item2,
             "Job_Department": item3
         }
-        console.log(newCourses)
+        // console.log(newCourses)
         fetch("http://127.0.0.1:8000/job_role/create_job_role",
             {
                 method: "POST",
@@ -178,7 +225,7 @@ function UpdateTodo({ Role_Name, Department, id }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({"Job_Role_ID":todo1,"Job_Role_Name": todo2 , "Job_Department":todo3})
         })
-        console.log(todo1)
+        // console.log(todo1)
         onClose()
         await fetchCourseList()
     }
@@ -238,7 +285,7 @@ function UpdateTodo({ Role_Name, Department, id }) {
 
 
 function DeleteTodo({Role_Name, Department, id}) {
-    console.log(id)
+    // console.log(id)
     const {fetchCourseList} = React.useContext(CourseListContext)
   
     const deleteTodo = async () => {
@@ -254,3 +301,6 @@ function DeleteTodo({Role_Name, Department, id}) {
       <Button h="1.5rem" size="sm" onClick={deleteTodo}>Delete Role</Button>
     )
   }
+
+
+   
