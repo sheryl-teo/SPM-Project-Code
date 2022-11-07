@@ -131,14 +131,7 @@ def error_6(search_jobrole_dept: str):
     description="Get a list of all job roles details",
 )
 def get_all_jobrole():
-    roles_ID = []
-    response = conn.execute(job_roles.select()).fetchall()
-    for r in response:
-        roles_ID.append(r['Job_Role_ID'])
-    response_json = {
-        "jobrolesid": roles_ID
-    }
-    return response_json
+    return conn.execute(job_roles.select()).fetchall()
 
 # Create
 @job_role.post(

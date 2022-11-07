@@ -54,15 +54,6 @@ def get_staff_learning_journey(Staff_ID: int):
     return conn.execute(learning_journeys.select().where(learning_journeys.c.Staff_ID == Staff_ID)).fetchall()
    
 # User story: see a learning journey that a staff has
-# roles_json= requests.get("localhost:8000/learningjourney_courses/read/lj/") #Role 
-#     roles = []
-#     for r in roles_json:
-#         roles.append(r["Role_ID"]) 
-#     response = {
-#         "roles": roles
-#     }
-
-#     return response
 @learning_journey.post(
     "/learning_journey/get_a_staff_learning_journey",
     tags=["learning_journeys"],
@@ -80,11 +71,11 @@ def get_a_staff_learning_journey(slj: dict):
     response = conn.execute(learning_journeys.select().where(
         (learning_journeys.c.Staff_ID == staff_id) & 
         (learning_journeys.c.Learning_Journey_ID == learning_journey_id))).fetchall()
-    job_role_id = str(response[0]['Job_Role_ID'])
+    job_role_id = response[0]['Job_Role_ID']
     # get job role name
     response2 = conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == job_role_id)).fetchall()
-    job_role_name = response2['Job_Role_Name']
-    return job_role_name
+    job_role_name = response2[0]['Job_Role_Name']
+    return job_role_name, job_role_id
     # get skill id
     # get skill name
    
