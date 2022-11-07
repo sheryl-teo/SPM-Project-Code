@@ -2,116 +2,168 @@ from fastapi import APIRouter
 from config.db import conn
 from schemas.job_role_skill import Job_role_skill
 from models.job_role_skill import job_role_skills
+from schemas.skill import Skill
+from models.skill import skills
+from schemas.job_role import Job_role
+from models.job_role import job_roles
 from typing import List
 from sqlalchemy import func, select
 
+from routes.job_role import error_1 as jobrole_error1
+from routes.job_role import error_3 as jobrole_error3
+
+from routes.skill import error_1 as skill_error1
+from routes.skill import error_3 as skill_error3
+
 job_role_skill = APIRouter()
 
-# Get all skill course relationships
+# Get all job role skill relationships
 @job_role_skill.get(
     "/job_role_skills",
-    tags=["skills"],
+    tags=["job_role_skill"],
     response_model=List[Job_role_skill],
-    description="Get a list of all skill course relationships.",
+    description="Get a list of all job role skill relationships.",
 )
-def get_all_skill_course():
+def get_all_job_role_skill():
     return conn.execute(job_role_skills.select()).fetchall()
 
 # Create
-@skill_course.post(
-    "/skill_course/create",
-    tags=["skills"],
-    response_model=List[Skill_course],
-    description="Create a new skill course relationship.",
+@job_role_skill.post(
+    "/job_role_skills/create",
+    tags=["job_role_skill"],
+    description="Create a new job role skill relationship.",
 )
-async def create_skill(skill_course: dict):
-    """Create a new skill course relationship.
-    Course_Id: str
-    Skill_Id: str
-    soft_delete: bool
-    Args:
-        skill_course (dict): JSON dictionary, containing Course_Id, Skill_Id, soft_delete
-
-    Returns:
-        _type_: _description_
-    """
-    skill_course['Skill_ID'] = skill_course['Skill_ID'].capitalize()
-    skill_course['Course_ID'] = skill_course['Course_ID'].capitalize()
-    skill_course['soft_delete'] = False
-
+async def create_job_role_skill(job_role_skill: Job_role_skill):
     # Error handling: 
-    search_skill_ID = skill_course['Skill_ID']
-    search_course_ID = skill_course['Course_ID']
+    search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
+    search_skill_ID = job_role_skill.Skill_ID.upper()
 
-    # errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
-    # errors_list = [e for e in errors if e != None]
-    # if len(errors_list) == 0:
-    #     statement = skills.insert([skill])
-    #     return conn.execute(statement)
-    # else:
-    #     return {'errors': errors_list}
-
-    statement = skill_courses.insert([skill_course])
-    conn.execute(statement)
+    errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID), skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        # Create job role skill
+        statement = job_role_skills.insert([job_role_skill])
+        conn.execute(statement)
+        # Return created job role skill
+        return conn.execute(job_role_skills.select().where(
+            (job_role_skills.c.Job_Role_ID == search_jobrole_ID) & 
+            (job_role_skills.c.Skill_ID == search_skill_ID))
+            ).fetchall()
+    else:
+        return {'errors': errors_list}
 
 # Read 
-
-# Get all skills in a course
-@skill_course.get(
-    "/skill_courses/skills_in_course/{Course_ID}",
-    tags=["skill_courses"],
-    response_model=List[Skill_course],
-    description="Get a list of all skills in course",
+@job_role_skill.get(
+    "/job_role_skills/read/jobrole/{search_jobrole}",
+    tags=["job_role_skill"],
+    description="Get a list of all active skills for a role",
 )
-def get_skill_course(Course_ID: str):
-    Course_ID = Course_ID.capitalize()
-    return conn.execute(skill_courses.select().where(skill_courses.c.Course_ID == {Course_ID} & skill_courses.c.soft_delete == False)).fetchall()
+def get_skill_jobrole(search_jobrole: str):
+    # Error handling
+    search_jobrole = search_jobrole.upper()
+    errors = [jobrole_error1(search_jobrole), jobrole_error3(search_jobrole)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        return conn.execute(job_role_skills.select().where(
+            (job_role_skills.c.Job_Role_ID == search_jobrole) & (job_role_skills.c.Active == 1))).fetchall()
+    else:
+        return {'errors': errors_list}
 
-# Get courses for each skill
-@skill_course.get(
-    "/skill_courses/courses_in_skill/{Skill_ID}",
-    tags=["skill_courses"],
-    response_model=List[Skill_course],
-    description="Get a list of all skills in course",
+
+@job_role_skill.get(
+    "/job_role_skills/read/skill/{search_skill}",
+    tags=["job_role_skill"],
+    description="Get a list of all roles with a skill",
 )
-def get_skill_course(Skill_ID: str):
-    Skill_ID = Skill_ID.capitalize()
-    return conn.execute(skill_courses.select().where(skill_courses.c.Skill_ID == {Skill_ID} & skill_courses.c.soft_delete == False)).fetchall()
+def get_job_role_skill(search_skill: str):
+    # Error handling
+    search_skill = search_skill.capitalize()
+    errors = [skill_error1(search_skill), skill_error3(search_skill)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        # Return a list of all roles with a skill
+        return conn.execute(job_role_skills.select().where(
+            (job_role_skills.c.Skill_ID == search_skill) & 
+            (job_role_skills.c.Active == 1))).fetchall()
+    else:
+        return {'errors': errors_list}
 
-# Soft delete course skill relationship
-@skill_course.post(
-    "/skill_course/create",
-    tags=["skills"],
-    response_model=List[Skill_course],
-    description="Create a new skill course relationship.",
+# Soft delete 
+@job_role_skill.post(
+    "/job_role_skills/delete/soft",
+    tags=["job_role_skill"],
+    description="Soft delete job role skill relationship.",
 )
-async def update_soft_delete(skill_course: dict):
-    """Create a new skill course relationship.
-    Course_Id: str
-    Skill_Id: str
-    soft_delete: bool
-    Args:
-        skill_course (dict): JSON dictionary, containing Course_Id, Skill_Id
-
-    Returns:
-        _type_: _description_
-    """
-    skill_course['Skill_ID'] = skill_course['Skill_ID'].capitalize()
-    skill_course['Course_ID'] = skill_course['Course_ID'].capitalize()
+def update_soft_delete(job_role_skill: Job_role_skill):
 
     # Error handling: 
-    search_skill_ID = skill_course['Skill_ID']
-    search_course_ID = skill_course['Course_ID']
+    search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
+    search_skill_ID = job_role_skill.Skill_ID.capitalize()
+    job_role_skill.Active = 0
 
-    # errors = [error_2(search_skill_ID), error_3(search_skill_ID)]
-    # errors_list = [e for e in errors if e != None]
-    # if len(errors_list) == 0:
-    #     statement = skills.insert([skill])
-    #     return conn.execute(statement)
-    # else:
-    #     return {'errors': errors_list}
+    errors = [
+        jobrole_error1(search_jobrole_ID), 
+        jobrole_error3(search_jobrole_ID), 
+        skill_error1(search_skill_ID), 
+        skill_error3(search_skill_ID)
+        ]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = job_role_skills.update().where(
+            (job_role_skills.c.Skill_ID==job_role_skill.Skill_ID) & 
+            (job_role_skills.c.Job_Role_ID==job_role_skill.Job_Role_ID)
+            ).values(Active=job_role_skill.Active)
+        conn.execute(statement)
+    else:
+        return {'errors': errors_list}
 
-    statement = skill_courses.update().where(skill_courses.c.Skill_ID==skill_course['Skill_ID'] & skill_courses.c.Course_ID==skill_course['Course_ID']).values(soft_delete=skill_course['soft_delete'])
-    conn.execute(statement)
-
+# Soft undelete 
+@job_role_skill.post(
+    "/job_role_skills/delete/softrestore",
+    tags=["job_role_skill"],
+    description="Soft undelete job role skill relationship.",
+)
+def delete_jobrole_softrestore(job_role_skill: Job_role_skill):
     
+
+    # Error handling: 
+    search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
+    search_skill_ID = job_role_skill.Skill_ID.capitalize()
+    job_role_skill.Active = 1
+
+    errors = [
+        jobrole_error1(search_jobrole_ID), 
+        jobrole_error3(search_jobrole_ID), 
+        skill_error1(search_skill_ID), 
+        skill_error3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = job_role_skills.update().where(
+            (job_role_skills.c.Skill_ID==job_role_skill.Skill_ID) & 
+            (job_role_skills.c.Job_Role_ID==job_role_skill.Job_Role_ID)
+            ).values(Active=job_role_skill.Active)
+        conn.execute(statement)
+    else:
+        return {'errors': errors_list}
+
+# # Hard delete
+# @job_role_skill.post(
+#     "/job_role_skills/delete/hard",
+#     tags=["skills"],
+#     description="Hard delete job role skill relationship.",
+# )
+# async def update_hard_delete(job_role_skill: dict):
+#     job_role_skill['Job_Role_ID'] = job_role_skill['Job_Role_ID'].upper()
+#     job_role_skill['Skill_ID'] = job_role_skill['Skill_ID'].upper()
+
+#     # Error handling: 
+#     search_jobrole_ID = job_role_skill['Job_Role_ID']
+#     search_skill_ID = job_role_skill['Skill_ID']
+
+#     errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID), skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
+#     errors_list = [e for e in errors if e != None]
+#     if len(errors_list) == 0:
+#         statement = job_role_skills.delete().where(job_role_skills.c.Skill_ID==job_role_skill['Skill_ID'] & job_role_skills.c.Job_Role_ID==job_role_skill['Job_Role_ID'])
+#         conn.execute(statement)
+#     else:
+#         return {'errors': errors_list}

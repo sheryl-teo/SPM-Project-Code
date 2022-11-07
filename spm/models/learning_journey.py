@@ -9,6 +9,9 @@ learning_journeys = Table(
     Column("Staff_ID",Integer),  
     Column("Job_Role_ID",String(5)),
     ForeignKeyConstraint(
-        ["Job_Role_ID", "Staff_ID"], ["job_role.Job_Role_ID", "staff.Staff_ID"]
-    ) 
+        ["Staff_ID"], ["staff.Staff_ID"], name = "fk_learning_journey_staff"
+    ),
+    ForeignKeyConstraint(
+        ["Job_Role_ID"], ["job_role.Job_Role_ID"], name="fk_learning_journey_job_role"
+    )
 )

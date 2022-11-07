@@ -8,4 +8,5 @@ job_roles = Table (
     Column("Job_Role_ID" , String(5), primary_key= True ),
     Column("Job_Role_Name" , String(50)),
     Column("Job_Department" , String(50)),
+    Column("Active", Integer)
     )

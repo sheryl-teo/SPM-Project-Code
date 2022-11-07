@@ -7,5 +7,6 @@ skills = Table(
      meta,
     Column("Skill_ID", String(5), primary_key=True),
     Column("Skill_Name", String(50)),
+    Column("Active", Integer)
 )
 
