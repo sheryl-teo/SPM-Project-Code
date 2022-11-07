@@ -21,7 +21,6 @@ job_role_skill = APIRouter()
 @job_role_skill.get(
     "/job_role_skills",
     tags=["job_role_skill"],
-    response_model=List[Job_role_skill],
     description="Get a list of all job role skill relationships.",
 )
 def get_all_job_role_skill():
