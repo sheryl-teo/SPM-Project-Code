@@ -9,7 +9,7 @@ staff = APIRouter()
 
 def error_1(Staff_ID: str):
     len_check = len(str(Staff_ID)) == 6
-    if len_check != False: 
+    if len_check == False: 
         error_msg = {
             'Error_ID': 'S1', 
             'Error_Desc': '''This staff has an invalid staff ID. Check your staff ID and try again.''',
