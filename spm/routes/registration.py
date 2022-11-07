@@ -9,7 +9,7 @@ from models.staff import staffs
 from typing import List
 from sqlalchemy import func, select, join
 from sqlalchemy.sql import text
-from routes.staff import error_1 
+# from routes.staff import error_1 
 
 registration = APIRouter()
 
