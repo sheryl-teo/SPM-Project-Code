@@ -111,15 +111,23 @@ def get_skill_course(search_skill_ID: str):
                 course_name_list.append(courserow[0]['Course_Name'])
         #format the response
         # output = {
-        #         "COR001": "Coursename",
-        #         "COR002": "Coursename",
-        #         "COR003": "Coursename"
-        #     }
+        #     "output" : [
+        #                 {"Course_ID": "COR002", "Course_Name": "Coursename"},
+        #                 {"Course_ID": "COR001", "Course_Name": "Coursename"},
+        #                 {"Course_ID": "COR003", "Course_Name": "Coursename"},
+        #                  ]
+        # }
+
         output = {}
+        courses_list = []
         for index in range(len(course_name_list)):
+            course_dict = {}
             course_id = course_id_list[index]
             course_name = course_name_list[index]
-            output[course_id] = course_name
+            course_dict["Course_ID"] = course_id
+            course_dict["Course_Name"] = course_name
+            courses_list.append(course_dict)
+        output["output"] = courses_list
         return output
         
         
@@ -128,16 +136,16 @@ def get_skill_course(search_skill_ID: str):
 
 # Soft delete
 @skill_course.post(
-    "/skill_courses/delete/soft",
+    "/skill_courses/delete/",
     tags=["skill_courses"],
-    description="Soft delete skill course relationship.",
+    description="Delete skill course relationship.",
 )
 def delete_skill_course(skill_course: Skill_course):
     
 
     # Error handling
-    search_course_ID = skill_course.Course_ID.capitalize()
-    search_skill_ID = skill_course.Skill_ID.capitalize()
+    search_course_ID = skill_course.Course_ID.upper()
+    search_skill_ID = skill_course.Skill_ID.upper()
     skill_course.Active = 0
 
     errors = [
@@ -148,39 +156,39 @@ def delete_skill_course(skill_course: Skill_course):
         ]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        statement = skill_courses.update().where(
+        statement = skill_courses.delete().where(
             (skill_courses.c.Skill_ID==skill_courses.Skill_ID) &
              (skill_courses.c.Job_Role_ID==skill_courses.Course_ID)
-             ).values(Active=skill_courses.Active)
+             )
         conn.execute(statement)
     else:   
         return {'errors': errors_list}
 
-# Soft undelete
-@skill_course.post(
-    "/skill_courses/delete/softrestore",
-    tags=["skill_courses"],
-    description="Soft undelete skill course relationship.",
-)
-def delete_skillcourse_softrestore(skill_course: Skill_course):
+# # Soft undelete
+# @skill_course.post(
+#     "/skill_courses/delete/softrestore",
+#     tags=["skill_courses"],
+#     description="Soft undelete skill course relationship.",
+# )
+# def delete_skillcourse_softrestore(skill_course: Skill_course):
 
-    # Error handling
-    search_course_ID = skill_course.Course_ID.capitalize()
-    search_skill_ID = skill_course.Skill_ID.capitalize()
-    skill_course.Active = 1
+#     # Error handling
+#     search_course_ID = skill_course.Course_ID.capitalize()
+#     search_skill_ID = skill_course.Skill_ID.capitalize()
+#     skill_course.Active = 1
 
-    errors = [
-        skill_error1(search_skill_ID), 
-        skill_error3(search_skill_ID),
-        course_error1(search_course_ID), 
-        course_error2(search_course_ID)
-        ]
-    errors_list = [e for e in errors if e != None]
-    if len(errors_list) == 0:
-        statement = skill_courses.update().where(
-            (skill_courses.c.Skill_ID==skill_courses.Skill_ID) &
-             (skill_courses.c.Job_Role_ID==skill_courses.Course_ID)
-             ).values(Active=skill_courses.Active)
-        conn.execute(statement)
-    else:   
-        return {'errors': errors_list}
+#     errors = [
+#         skill_error1(search_skill_ID), 
+#         skill_error3(search_skill_ID),
+#         course_error1(search_course_ID), 
+#         course_error2(search_course_ID)
+#         ]
+#     errors_list = [e for e in errors if e != None]
+#     if len(errors_list) == 0:
+#         statement = skill_courses.update().where(
+#             (skill_courses.c.Skill_ID==skill_courses.Skill_ID) &
+#              (skill_courses.c.Job_Role_ID==skill_courses.Course_ID)
+#              ).values(Active=skill_courses.Active)
+#         conn.execute(statement)
+#     else:   
+#         return {'errors': errors_list}
