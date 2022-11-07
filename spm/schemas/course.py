@@ -8,4 +8,3 @@ class Course(BaseModel):
     Course_Status: str
     Course_Type: str
     Course_Category: str
-
