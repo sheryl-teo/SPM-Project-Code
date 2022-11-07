@@ -116,7 +116,7 @@ async def create_skill(skill: Skill):
     Returns:
         _type_: _description_
     """
-    skill.Skill_ID = skill.Skill_ID.capitalize()
+    skill.Skill_ID = skill.Skill_ID.upper()
     search_skill_ID = skill.Skill_ID
     search_skill_name = skill.Skill_Name
 
@@ -149,7 +149,7 @@ def read_skill_id(search_skill_ID: str):
     Returns:
         _type_: _description_
     """
-    search_skill_ID = search_skill_ID.capitalize()
+    search_skill_ID = search_skill_ID.upper()
 
     errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
     print('errors', errors)
@@ -194,7 +194,7 @@ async def update_skill(search_skill: Skill):
     Returns:
         _type_: _description_
     """
-    search_skill.Skill_ID = search_skill.Skill_ID.capitalize()
+    search_skill.Skill_ID = search_skill.Skill_ID.upper()
     search_skill_ID = search_skill.Skill_ID
     search_skill_name = search_skill.Skill_Name
 
@@ -223,7 +223,7 @@ def delete_skill_soft(search_skill_ID: str):
         search_skill_ID (str): Skill ID, following the format "SXX", 
         with XX representing the skill number.
     """
-    search_skill_ID = search_skill_ID.capitalize()
+    search_skill_ID = search_skill_ID.upper()
     errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
@@ -263,7 +263,7 @@ def delete_skill_soft(search_skill_ID: str):
         search_skill_ID (str): Skill ID, following the format "SXX", 
         with XX representing the skill number.
     """
-    search_skill_ID = search_skill_ID.capitalize()
+    search_skill_ID = search_skill_ID.upper()
     errors = [error_1(search_skill_ID), error_3(search_skill_ID)]
     errors_list = [e for e in errors if e != None]
 

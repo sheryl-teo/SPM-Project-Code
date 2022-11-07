@@ -181,7 +181,7 @@ def test_create_jobrole_8():
         "errors": [
             {
                 "Error_ID": "JR5",
-                "Error_Desc": '''This job role name is too long (more than 50 characters). Check your job role name and try again.''',
+                'Error_Desc': '''This job role name is too long (more than 50 characters). Check your job role name and try again.''',
                 "Error_Details": ""
             }
         ]
@@ -204,7 +204,7 @@ def test_create_jobrole_9():
         "errors": [
             {
                 "Error_ID": "JR6",
-                "Error_Desc": "This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
+                "Error_Desc": '''This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
                 "Error_Details": ""
             }
         ]
@@ -227,7 +227,7 @@ def test_create_jobrole_10():
         "errors": [
             {
                 "Error_ID": "JR6",
-                "Error_Desc": "This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
+                "Error_Desc": "This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
                 "Error_Details": ""
             }
         ]
@@ -251,7 +251,7 @@ def test_create_jobrole_11():
         "errors": [
             {
                 "Error_ID": "JR6",
-                "Error_Desc": "This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
+                "Error_Desc": "This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
                 "Error_Details": ""
             }
         ]
@@ -384,7 +384,7 @@ def test_read_jobrole_name_1():
         }
     ]
 
-def test_read_jobrole_jobroleID_2():
+def test_read_jobrole_name_2():
     """Valid Path: Read inactive job role by exact match job role name
     """
     response = client.get("/jobroles/read/name/Employee conflict management")
@@ -565,7 +565,7 @@ def test_read_jobrole_dept_5():
         "errors": [
             {
                 "Error_ID": "JR6",
-                "Error_Desc": "This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
+                "Error_Desc": "This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.",
                 "Error_Details": ""
             }
         ]
@@ -775,7 +775,7 @@ def test_update_jobrole_5():
         "errors": [
             {
                 'Error_ID': 'JR6', 
-                'Error_Desc': '''This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
+                'Error_Desc': '''This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
                 'Error_Details': ''
             }
         ]
@@ -808,7 +808,7 @@ def test_update_jobrole_6():
         "errors": [
             {
                 'Error_ID': 'JR6', 
-                'Error_Desc': '''This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
+                'Error_Desc': '''This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
                 'Error_Details': ''
             }
         ]
@@ -841,7 +841,7 @@ def test_update_jobrole_7():
         "errors": [
             {
                 'Error_ID': 'JR6', 
-                'Error_Desc': '''This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
+                'Error_Desc': '''This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
                 'Error_Details': ''
             }
         ]
