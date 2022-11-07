@@ -6,8 +6,11 @@ from schemas.learning_journey_course import Learning_journey_course
 from models.learning_journey_course import learning_journey_courses
 from schemas.learning_journey_skill import Learning_journey_skill
 from models.learning_journey_skill import learning_journey_skills
+from schemas.job_role import Job_role
+from models.job_role import job_roles
 from typing import List
 from sqlalchemy import func, select, join
+import requests
 
 learning_journey = APIRouter()
 
@@ -40,7 +43,7 @@ def get_learning_journey():
    
 
 
-
+# User story: see all learning journey that a staff has
 @learning_journey.get(
     "/learning_journey/get_staff_learning_journey/{Staff_ID}",
     tags=["learning_journeys"],
@@ -50,8 +53,41 @@ def get_staff_learning_journey(Staff_ID: int):
     #get all learning journeys of a staff
     return conn.execute(learning_journeys.select().where(learning_journeys.c.Staff_ID == Staff_ID)).fetchall()
    
+# User story: see a learning journey that a staff has
+# roles_json= requests.get("localhost:8000/learningjourney_courses/read/lj/") #Role 
+#     roles = []
+#     for r in roles_json:
+#         roles.append(r["Role_ID"]) 
+#     response = {
+#         "roles": roles
+#     }
 
-
+#     return response
+@learning_journey.post(
+    "/learning_journey/get_a_staff_learning_journey",
+    tags=["learning_journeys"],
+    description="Get a learning journey details of a staff",
+)
+def get_a_staff_learning_journey(slj: dict):
+    # input format:
+    # {
+    #     "Staff_ID": 130001,
+    #     "Learning_Journey_ID": "LJ1"
+    # }
+    staff_id = slj['Staff_ID']
+    learning_journey_id = slj['Learning_Journey_ID']
+    # Get job role id
+    response = conn.execute(learning_journeys.select().where(
+        (learning_journeys.c.Staff_ID == staff_id) & 
+        (learning_journeys.c.Learning_Journey_ID == learning_journey_id))).fetchall()
+    job_role_id = str(response[0]['Job_Role_ID'])
+    # get job role name
+    response2 = conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == job_role_id)).fetchall()
+    job_role_name = response2['Job_Role_Name']
+    return job_role_name
+    # get skill id
+    # get skill name
+   
 
 @learning_journey.put(
     "/learning_journey/update_learning_journey",

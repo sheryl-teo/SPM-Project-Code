@@ -53,18 +53,49 @@ async def create_job_role_skill(job_role_skill: Job_role_skill):
 
 # Read 
 @job_role_skill.get(
-    "/job_role_skills/read/jobrole/{search_jobrole}",
+    "/job_role_skills/read/jobrole/{search_jobrole_ID}",
     tags=["job_role_skill"],
     description="Get a list of all active skills for a role",
 )
-def get_skill_jobrole(search_jobrole: str):
+def get_skill_jobrole(search_jobrole_ID: str):
     # Error handling
-    search_jobrole = search_jobrole.upper()
-    errors = [jobrole_error1(search_jobrole), jobrole_error3(search_jobrole)]
+    search_jobrole_ID = search_jobrole_ID.upper()
+    errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        return conn.execute(job_role_skills.select().where(
-            (job_role_skills.c.Job_Role_ID == search_jobrole) & (job_role_skills.c.Active == 1))).fetchall()
+        # Return a list of all active skills in a active job role
+        response = conn.execute(job_role_skills.select().where(
+            (job_role_skills.c.Job_Role_ID == search_jobrole_ID) & 
+            (job_role_skills.c.Active == 1))).fetchall()
+        skill_id_list = []
+        for r in response:
+            # get a list of skill id
+            skill_id_list.append(r["Skill_ID"])
+        skill_name_list = []
+        #for each skill id,
+        for s in skill_id_list:
+            # get the row from skills table
+            skillrow = conn.execute(skills.select().where(
+                skills.c.Skill_ID == s
+            )).fetchall()
+            # get the skills name from row
+        # return skillrow
+            if skillrow != []:
+                skill_name_list.append(skillrow[0]["Skill_Name"])
+        
+        #format the response
+        # output = {
+        #         "S1": "Skillname",
+        #         "S2": "Skillname",
+        #         "S3": "Skillname"
+        #     }
+        output = {}
+        for index in range(len(skill_name_list)):
+            skill_id = skill_id_list[index]
+            skill_name = skill_name_list[index]
+            output[skill_id] = skill_name
+        return output
+        
     else:
         return {'errors': errors_list}
 
