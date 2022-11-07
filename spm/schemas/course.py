@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Course(BaseModel):
+    Course_ID: int
     Course_Name: str
     Course_Desc: str
     Course_Status: str
