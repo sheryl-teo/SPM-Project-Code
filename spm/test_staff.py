@@ -38,7 +38,7 @@ def test_read_staff_ID_3():
     assert response.json() == {
     "errors": [
             {
-                "Error_ID": "S3",
+                "Error_ID": "S1",
                 "Error_Desc": "This staff has an invalid staff ID. Check your staff ID and try again.",
                 "Error_Details": ""
             }
@@ -53,7 +53,7 @@ def test_read_staff_ID_4():
     assert response.json() == {
     "errors": [
             {
-                "Error_ID": "S3",
+                "Error_ID": "S1",
                 "Error_Desc": "This staff has an invalid staff ID. Check your staff ID and try again.",
                 "Error_Details": ""
             }
