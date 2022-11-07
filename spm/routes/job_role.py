@@ -285,27 +285,27 @@ def delete_jobrole_softrestore(search_jobrole_ID: str):
     else:
         return {'errors': errors_list}
 
-# @job_role.get(
-#     "/jobroles/delete/hard/{search_jobrole_ID}",
-#     tags=["job_roles"],
-#     description="Hard delete a specified job role",
-# )
-# def delete_jobrole_hard(search_jobrole_ID: str):
-#     search_jobrole_ID = search_jobrole_ID.upper()
-#     errors = [error_1(search_jobrole_ID), error_3(search_jobrole_ID)]
-#     errors_list = [e for e in errors if e != None]
+@job_role.get(
+    "/jobroles/delete/hard/{search_jobrole_ID}",
+    tags=["job_roles"],
+    description="Hard delete a specified job role",
+)
+def delete_jobrole_hard(search_jobrole_ID: str):
+    search_jobrole_ID = search_jobrole_ID.upper()
+    errors = [error_1(search_jobrole_ID), error_3(search_jobrole_ID)]
+    errors_list = [e for e in errors if e != None]
 
-#     if len(errors_list) == 0:
-#         # Job role skill
-#         job_role_skill_statement = job_role_skills.delete().where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
-#         conn.execute(job_role_skill_statement)
+    if len(errors_list) == 0:
+        # Job role skill
+        job_role_skill_statement = job_role_skills.delete().where(job_role_skills.c.Job_Role_ID==search_jobrole_ID)
+        conn.execute(job_role_skill_statement)
 
-#         # Job role 
-#         jobrole_statement = job_roles.delete().where(job_roles.c.Job_Role_ID==search_jobrole_ID)
-#         conn.execute(jobrole_statement)
+        # Job role 
+        jobrole_statement = job_roles.delete().where(job_roles.c.Job_Role_ID==search_jobrole_ID)
+        conn.execute(jobrole_statement)
         
-#         return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == search_jobrole_ID)).fetchall()
+        return conn.execute(job_roles.select().where(job_roles.c.Job_Role_ID == search_jobrole_ID)).fetchall()
 
-#     else:
-#         return {'errors': errors_list}
+    else:
+        return {'errors': errors_list}
 
