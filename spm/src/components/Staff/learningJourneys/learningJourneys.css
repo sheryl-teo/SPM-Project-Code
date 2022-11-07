@@ -1,0 +1,8 @@
+.indivLJ {
+    text-align: start;
+    align-content: flex-start;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding:20px;
+    margin:20px;
+}
