@@ -96,7 +96,6 @@ def error_5(search_skill_name: str):
 @skill.get(
     "/skills",
     tags=["skills"],
-    response_model=List[Skill],
     description="Get a list of all skills",
 )
 def get_all_skill():

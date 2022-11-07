@@ -4,6 +4,8 @@ from schemas.skill_course import Skill_course
 from models.skill_course import skill_courses
 from schemas.skill import Skill
 from models.skill import skills
+from schemas.course import Course
+from models.course import courses
 from typing import List
 from sqlalchemy import func, select
 
@@ -43,8 +45,11 @@ def create_skill_course(skill_course: Skill_course):
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         # Create skill course
-        statement = skill_courses.insert([skill_course])
-        conn.execute(statement)
+        conn.execute(skill_courses.insert().values(
+            Course_ID = search_course_ID,
+            Skill_ID = search_skill_ID,
+            Active = 1
+        ))
         # Return created skill course
         return conn.execute(skill_courses.select().where(
             (skill_courses.c.Skill_ID == search_skill_ID) & 
@@ -68,7 +73,7 @@ def get_course_skill(search_course_ID: str):
         ]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        # Return a list of all skills in a course
+        # Return a list of all active skills in a active course
         return conn.execute(skill_courses.select().where(
             (skill_courses.c.Course_ID == search_course_ID) & 
             (skill_courses.c.Active == 1))).fetchall()
@@ -86,10 +91,38 @@ def get_skill_course(search_skill_ID: str):
     errors = [skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        # Return a list of skills in a course
-        return conn.execute(skill_courses.select().where(
+        # Return a list of all active course in a active skill
+        response = conn.execute(skill_courses.select().where(
             (skill_courses.c.Skill_ID == search_skill_ID) &
             (skill_courses.c.Active == 1))).fetchall()
+        course_id_list = []
+        for r in response:
+            # get a list of course ids
+            course_id_list.append(r['Course_ID'])
+        course_name_list = []
+        # for each course id,
+        for c in course_id_list:
+            # get the row from courses table
+            courserow = conn.execute(courses.select().where(
+                courses.c.Course_ID == c
+            )).fetchall()
+            # get the course name from row
+            if courserow != []:
+                course_name_list.append(courserow[0]['Course_Name'])
+        #format the response
+        # output = {
+        #         "COR001": "Coursename",
+        #         "COR002": "Coursename",
+        #         "COR003": "Coursename"
+        #     }
+        output = {}
+        for index in range(len(course_name_list)):
+            course_id = course_id_list[index]
+            course_name = course_name_list[index]
+            output[course_id] = course_name
+        return output
+        
+        
     else:   
         return {'errors': errors_list}
 
