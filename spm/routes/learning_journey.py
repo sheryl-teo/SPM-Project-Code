@@ -20,14 +20,40 @@ from sqlalchemy import func, select, join
 import requests
 
 
-from routes.job_role import error_1 as jobrole_error1
-from routes.job_role import error_3 as jobrole_error3
-
-from routes.skill import error_1 as skill_error1
-from routes.skill import error_3 as skill_error3
-
+# from routes.job_role import error_1 as jobrole_error1
+# from routes.job_role import error_3 as jobrole_error3
+# from routes.course import error_1 as course_error1
+# from routes.course import error_2 as course_error2
+# from routes.skill import error_1 as skill_error1
+# from routes.skill import error_3 as skill_error3
+# from routes.staff import error_1 as staff_error1
 learning_journey = APIRouter()
 
+#####################################
+#error handling
+#####################################
+def error_1(learningjourneyID: str):
+    letter_check = learningjourneyID[:2] == 'LJ'
+    int_check = can_convert_to_int(learningjourneyID[2:])
+    if letter_check == False or int_check == False:
+        error_msg = {
+            'Error_ID': 'LJ1', 
+            'Error_Desc': '''This learning journey has an invalid learning journey ID. Check your learning journey ID and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    return error_msg
+
+def can_convert_to_int(string: str):
+    try:
+        int(string)
+        return True
+    except ValueError:
+        return False
+#####################################
+#error handling
+#####################################
 
 # Create a learning journey
 @learning_journey.post(
@@ -58,7 +84,26 @@ def create_learning_journey(clj: dict):
     course_list = clj['course_list']
 
     # Error handling
-    learning_journey_id = learning_journey_id.upper()
+    # errors = []
+    # learning_journey_id = learning_journey_id.upper()
+    # job_role_id = job_role_id.upper()
+    # for course_id in course_list:
+    #     course_id = course_id.upper()
+    #     errors.append(course_error1(course_id))
+    #     errors.append(course_error2(course_id))
+
+    # for skill_id in skill_list:
+    #     skill_id = skill_id.upper()
+    #     errors.append(skill_error1(skill_id))
+    #     errors.append(skill_error3(skill_id))
+    
+    # errors.append(staff_error1(staff_id))
+    # errors.append(error_1(learning_journey_id))
+    # errors.append(jobrole_error1(job_role_id))
+    # errors.append(jobrole_error3(job_role_id))
+    # errors_list = [e for e in errors if e != None]
+    
+    # if len(errors_list) == 0:
     # return learning_journey_id
     # create row in learning journey table
     conn.execute(learning_journeys.insert().values(
@@ -66,6 +111,7 @@ def create_learning_journey(clj: dict):
         Job_Role_ID = job_role_id,
         Staff_ID = staff_id
     ))
+
     #for each course in course_list
     for course_id in course_list:
         # create row in learning journey course table
@@ -87,7 +133,6 @@ def create_learning_journey(clj: dict):
     }
     response = get_a_staff_learning_journey(slj)
     return response
-
 
 @learning_journey.get(
     "/learning_journey/get_learning_journey",
@@ -123,6 +168,9 @@ def get_a_staff_learning_journey(slj: dict):
     # }
     staff_id = slj['Staff_ID']
     learning_journey_id = slj['Learning_Journey_ID']
+
+    # error handling
+
     # Get job role id
     response = conn.execute(learning_journeys.select().where(
         (learning_journeys.c.Staff_ID == staff_id) & 

@@ -21,7 +21,6 @@ skill_course = APIRouter()
 @skill_course.get(
     "/skill_courses",
     tags=["skill_courses"],
-    response_model=List[Skill_course],
     description="Get a list of all skill course relationships.",
 )
 def get_all_skill_course():

@@ -75,6 +75,21 @@ def get_all_courses():
     return conn.execute(courses.select()).fetchall()
 
 @course.get(
+    "/courses/get_all_courses_id",
+    tags=["courses"],
+    description="Get a list of all courses id",
+)
+def get_all_cget_all_courses_idourses():
+    #get all courses
+    course_list = []
+    response = conn.execute(courses.select()).fetchall()
+    for r in response:
+        course_id = r['Course_ID']
+        course_list.append(course_id)
+    return course_list
+
+
+@course.get(
     "/courses/get_course_by_id/{Course_ID}", 
     tags=["courses"], 
     response_model=List[Course],
