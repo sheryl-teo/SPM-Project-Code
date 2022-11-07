@@ -110,7 +110,7 @@ def get_skill_jobrole(search_jobrole_ID: str):
 )
 def get_job_role_skill(search_skill: str):
     # Error handling
-    search_skill = search_skill.capitalize()
+    search_skill = search_skill.upper()
     errors = [skill_error1(search_skill), skill_error3(search_skill)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
@@ -130,8 +130,8 @@ def get_job_role_skill(search_skill: str):
 def update_soft_delete(job_role_skill: Job_role_skill):
 
     # Error handling: 
-    search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
-    search_skill_ID = job_role_skill.Skill_ID.capitalize()
+    search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
+    search_skill_ID = job_role_skill.Skill_ID.upper()
     job_role_skill.Active = 0
 
     errors = [
@@ -160,8 +160,8 @@ def update_soft_delete(job_role_skill: Job_role_skill):
     
 
 #     # Error handling: 
-#     search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
-#     search_skill_ID = job_role_skill.Skill_ID.capitalize()
+#     search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
+#     search_skill_ID = job_role_skill.Skill_ID.upper()
 #     job_role_skill.Active = 1
 
 #     errors = [
