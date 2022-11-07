@@ -94,6 +94,7 @@ export default function JobList() {
                 <UndoSoftDelete/>
                 <UpdateCourses/>
                 <AssignSkills/>
+                {/* <DeleteAssignSkills/> */}
                 {CourseList.map((CourseList) => (
                     
                     <>
@@ -498,7 +499,7 @@ function AssignSkills() {
         }).then(fetchCourseList)
 
         .then(response=>console.log(response))
-        .catch(error=>alert(error))
+        .catch(error=>console.log(error))
 
         // fetch("http://127.0.0.1:8000/job_role_skills/create",
         //     {
@@ -550,7 +551,7 @@ function AssignSkills() {
         
     })
    
-    
+    console.log(skillList)
 
     return (
         <>
@@ -574,7 +575,7 @@ function AssignSkills() {
            )}
         </select>
 
-             <button type="button" value="Submit" onClick={handleSubmit}>Assign</button>
+             <button type="submit" value="Submit" onClick={handleSubmit}>Assign</button>
 
 
         </form>
@@ -585,4 +586,119 @@ function AssignSkills() {
 
 
 
+// function DeleteAssignSkills() {
+
+//     const [id, setID] = React.useState("")
+//     const [department, setDepartment] = React.useState("")
+
+//     const { Courses, fetchCourseList } = React.useContext(CourseListContext)
+
+//     const handleInput1 = (id1)=> {
+//         setID(id1)
+        
+//     }
+
+//     const handleInput3 = (department1) => {
+//         setDepartment(department1)
+//     }
+
+    
+//     const handleSubmit = (event) => {
+//         const newCourses = {
+//             "Job_Role_ID": id,
+//             "Skill_ID": department,
+//             'Active':1
+//         }
+
+//         fetch("http://127.0.0.1:8000/job_role_skills/delete",
+//         {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(newCourses)
+//         }).then(fetchCourseList)
+
+//         .then(response=>console.log(response))
+//         .catch(error=>console.log(error))
+
+        // fetch("http://127.0.0.1:8000/job_role_skills/create",
+        //     {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(newCourses)
+        //     }).then(fetchCourseList)
+
+        //     .then(response=>console.log(response))
+        //     .catch(error=>console.log(error))
+
+//     }
+
+//     const [JobID, setJobID] = useState([])
+//     const fetchJobID = async () => {
+//         const response = await fetch("http://127.0.0.1:8000/jobroles/")
+//         const JobID = await response.json()
+//         setJobID(JobID)
+//     }
+//     useEffect(() => {
+//         fetchJobID()
+//     }, [])
+
+//     const [SkillID, setSkillID] = useState([])
+//     const fetchSkillID = async () => {
+//         const response = await fetch("http://127.0.0.1:8000/skills")
+//         const SkillID = await response.json()
+//         setSkillID(SkillID)
+//     }
+//     useEffect(() => {
+//         fetchSkillID()
+//     }, [])
+
+//     const IDList=[]
+//     JobID.map((JobID)=>{
+//         IDList.push(JobID.Job_Role_ID)
+        
+//     })
+
+//     const departmentList=[]
+//     JobID.map((JobID)=>{
+//         departmentList.push(JobID.Job_Department)
+        
+//     })
+    
+//     const skillList=[]
+//     SkillID.map((SkillID)=>{
+//         skillList.push(SkillID.Skill_ID)
+        
+//     })
    
+    
+
+//     return (
+//         <>
+//         <p><b><u>Delete Skills Assignment</u></b></p>
+//         <form>
+//         Role ID:
+//         <select 
+//         onChange={(event) => handleInput1(event.target.value)}>
+//         <option>Select</option>
+//            {IDList.map((ID)=>
+//            <option value = {ID} >{ID}</option>
+//            )}
+//         </select>
+
+//         Skills ID:
+//         <select 
+//         onChange={(event) => handleInput3(event.target.value)}>
+//             <option>Select</option>
+//            {skillList.map((skill)=>
+//            <option value = {skill} >{skill}</option>
+//            )}
+//         </select>
+
+//              <button type="button" value="Submit" onClick={handleSubmit}>Assign</button>
+
+
+//         </form>
+//         </>
+            
+//     )
+// }

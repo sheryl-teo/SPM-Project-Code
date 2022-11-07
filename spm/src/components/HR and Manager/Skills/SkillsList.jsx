@@ -50,7 +50,8 @@ export default function JobList() {
     
     JobAssignment.map((JobAssignment)=>{
         if(JobAssignment.Skill_ID in JobAssignmentList){
-            if(JobAssignment.Skill_ID=='undefined'){
+            if(JobAssignment.Skill_ID===undefined){
+                console.log('hello')
             }
             else{
         const skills = JobAssignment.Job_Role_ID +' '
@@ -60,7 +61,7 @@ export default function JobList() {
         }
 
         else{
-            if(JobAssignment.Skill_ID=='undefined'){
+            if(JobAssignment.Skill_ID===undefined){
             }
             else{
         const skills = JobAssignment.Role_Job_ID +' '
@@ -70,6 +71,41 @@ export default function JobList() {
    
     })
 
+    const [JobAssignment1, setJobAssignment1] = useState([])
+    const fetchJobAssignment1 = async () => {
+        const response = await fetch("http://127.0.0.1:8000/job_role_skills")
+        const JobAssignment1 = await response.json()
+        setJobAssignment(JobAssignment1)
+    }
+    useEffect(() => {
+        fetchJobAssignment1()
+    }, [])
+    console.log(JobAssignment)
+    const JobAssignmentList1={}
+    
+    JobAssignment.map((JobAssignment)=>{
+        if(JobAssignment.Skill_ID in JobAssignmentList){
+            if(JobAssignment.Skill_ID===undefined){
+                console.log('hello')
+            }
+            else{
+        const skills = JobAssignment.Job_Role_ID +' '
+        JobAssignmentList[JobAssignment.Skill_ID].push(skills)
+            }
+
+        }
+
+        else{
+            if(JobAssignment.Skill_ID===undefined){
+            }
+            else{
+        const skills = JobAssignment.Role_Job_ID +' '
+        JobAssignmentList[JobAssignment.Skill_ID]=[skills]
+        }
+    }
+   
+    })
+    
 
     CourseList.map((Course)=>{
         if(Course.Skill_ID in JobAssignmentList){
@@ -105,6 +141,9 @@ export default function JobList() {
                 <UndoSoftDelete/>
                 <UpdateCourses/>
                 <AssignSkills/>
+                {/* <DeleteAssignSkills/> */}
+                <AssignCourses/>
+                {/* <DeleteAssignCourses/> */}
                 {CourseList.map((CourseList) => (
                     
                     <>
@@ -526,5 +565,371 @@ function AssignSkills() {
     )
 }
 
+// Assigning Skills To Roles
+
+
+// function DeleteAssignSkills() {
+
+//     const [id, setID] = React.useState("")
+//     const [department, setDepartment] = React.useState("")
+
+//     const { Courses, fetchCourseList } = React.useContext(CourseListContext)
+
+//     const handleInput1 = (id1)=> {
+//         setID(id1)
+        
+//     }
+
+//     const handleInput3 = (department1) => {
+//         setDepartment(department1)
+//     }
+
+    
+//     const handleSubmit = (event) => {
+//         const newCourses = {
+//             "Job_Role_ID": id,
+//             "Skill_ID": department,
+//             'Active':1
+//         }
+
+//         fetch("http://127.0.0.1:8000/job_role_skills/delete",
+//         {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(newCourses)
+//         }).then(fetchCourseList)
+
+//         .then(response=>console.log(response))
+//         .catch(error=>alert(error))
+
+        // fetch("http://127.0.0.1:8000/job_role_skills/create",
+        //     {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(newCourses)
+        //     }).then(fetchCourseList)
+
+        //     .then(response=>console.log(response))
+        //     .catch(error=>console.log(error))
+
+//     }
+
+//     const [JobID, setJobID] = useState([])
+//     const fetchJobID = async () => {
+//         const response = await fetch("http://127.0.0.1:8000/jobroles/")
+//         const JobID = await response.json()
+//         setJobID(JobID)
+//     }
+//     useEffect(() => {
+//         fetchJobID()
+//     }, [])
+
+//     const [SkillID, setSkillID] = useState([])
+//     const fetchSkillID = async () => {
+//         const response = await fetch("http://127.0.0.1:8000/skills")
+//         const SkillID = await response.json()
+//         setSkillID(SkillID)
+//     }
+//     useEffect(() => {
+//         fetchSkillID()
+//     }, [])
+
+//     const IDList=[]
+//     JobID.map((JobID)=>{
+//         IDList.push(JobID.Job_Role_ID)
+        
+//     })
+
+//     const departmentList=[]
+//     JobID.map((JobID)=>{
+//         departmentList.push(JobID.Job_Department)
+        
+//     })
+    
+//     const skillList=[]
+//     SkillID.map((SkillID)=>{
+//         skillList.push(SkillID.Skill_ID)
+        
+//     })
+   
+    
+
+//     return (
+//         <>
+//         <p><b><u>Delete Roles Assignment</u></b></p>
+//         <form>
+ 
+
+//         Skills ID:
+//         <select 
+//         onChange={(event) => handleInput3(event.target.value)}>
+//             <option>Select</option>
+//            {skillList.map((skill)=>
+//            <option value = {skill} >{skill}</option>
+//            )}
+//         </select>
+
+//         Role ID:
+//         <select 
+//         onChange={(event) => handleInput1(event.target.value)}>
+//         <option>Select</option>
+//            {IDList.map((ID)=>
+//            <option value = {ID} >{ID}</option>
+//            )}
+//         </select>
+
+//              <button type="submit" value="Submit" onClick={handleSubmit}>Delete</button>
+
+
+//         </form>
+//         </>
+            
+//     )
+// }
+
+
+
+
+function AssignCourses() {
+
+    const [id, setID] = React.useState("")
+    const [department, setDepartment] = React.useState("")
+
+    const { Courses, fetchCourseList } = React.useContext(CourseListContext)
+
+    const handleInput1 = (id1)=> {
+        setID(id1)
+        
+    }
+
+    const handleInput3 = (department1) => {
+        setDepartment(department1)
+    }
+
+    
+    const handleSubmit = (event) => {
+        const newCourses = {
+            "Course_ID": id,
+            "Skill_ID": department,
+            'Active':1
+        }
+
+        console.log(newCourses)
+
+        fetch("http://127.0.0.1:8000/skill_courses/create",
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newCourses)
+        }).then(fetchCourseList)
+
+        .then(response=>console.log(response))
+        .catch(error=>alert(error))
+
+        // fetch("http://127.0.0.1:8000/job_role_skills/create",
+        //     {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(newCourses)
+        //     }).then(fetchCourseList)
+
+        //     .then(response=>console.log(response))
+        //     .catch(error=>console.log(error))
+
+    }
+
+    const [JobID, setJobID] = useState([])
+    const fetchJobID = async () => {
+        const response = await fetch("http://127.0.0.1:8000/courses/get_all_courses")
+        const JobID = await response.json()
+        setJobID(JobID)
+    }
+    useEffect(() => {
+        fetchJobID()
+    }, [])
+
+    const [SkillID, setSkillID] = useState([])
+    const fetchSkillID = async () => {
+        const response = await fetch("http://127.0.0.1:8000/skills")
+        const SkillID = await response.json()
+        setSkillID(SkillID)
+    }
+    useEffect(() => {
+        fetchSkillID()
+    }, [])
+
+    const IDList=[]
+    JobID.map((JobID)=>{
+        IDList.push(JobID.Course_ID)
+        
+    })
+
+    const departmentList=[]
+    JobID.map((JobID)=>{
+        departmentList.push(JobID.Job_Department)
+        
+    })
+    
+    const skillList=[]
+    SkillID.map((SkillID)=>{
+        skillList.push(SkillID.Skill_ID)
+        
+    })
+   
+    
+
+    return (
+        <>
+        <p><b><u>Course Assignment</u></b></p>
+        <form>
+ 
+
+        Skills ID:
+        <select 
+        onChange={(event) => handleInput3(event.target.value)}>
+            <option>Select</option>
+           {skillList.map((skill)=>
+           <option value = {skill} >{skill}</option>
+           )}
+        </select>
+
+        Course ID:
+        <select 
+        onChange={(event) => handleInput1(event.target.value)}>
+        <option>Select</option>
+           {IDList.map((ID)=>
+           <option value = {ID} >{ID}</option>
+           )}
+        </select>
+
+             <button type="submit" value="Submit" onClick={handleSubmit}>Assign</button>
+
+
+        </form>
+        </>
+            
+    )
+}
+
+
+function DeleteAssignCourses() {
+
+    const [id, setID] = React.useState("")
+    const [department, setDepartment] = React.useState("")
+
+    const { Courses, fetchCourseList } = React.useContext(CourseListContext)
+
+    const handleInput1 = (id1)=> {
+        setID(id1)
+        
+    }
+
+    const handleInput3 = (department1) => {
+        setDepartment(department1)
+    }
+
+    
+    const handleSubmit = (event) => {
+        const newCourses = {
+            "Course_ID": id,
+            "Skill_ID": department,
+            'Active':1
+        }
+
+
+        fetch("http://127.0.0.1:8000/skill_courses/delete/",
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newCourses)
+        }).then(fetchCourseList)
+
+        .then(response=>console.log(response))
+        .catch(error=>alert(error))
+
+        // fetch("http://127.0.0.1:8000/job_role_skills/create",
+        //     {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(newCourses)
+        //     }).then(fetchCourseList)
+
+        //     .then(response=>console.log(response))
+        //     .catch(error=>console.log(error))
+
+    }
+
+    const [JobID, setJobID] = useState([])
+    const fetchJobID = async () => {
+        const response = await fetch("http://127.0.0.1:8000/courses/get_all_courses")
+        const JobID = await response.json()
+        setJobID(JobID)
+    }
+    useEffect(() => {
+        fetchJobID()
+    }, [])
+
+    const [SkillID, setSkillID] = useState([])
+    const fetchSkillID = async () => {
+        const response = await fetch("http://127.0.0.1:8000/skills")
+        const SkillID = await response.json()
+        setSkillID(SkillID)
+    }
+    useEffect(() => {
+        fetchSkillID()
+    }, [])
+
+    const IDList=[]
+    JobID.map((JobID)=>{
+        IDList.push(JobID.Course_ID)
+        
+    })
+
+    const departmentList=[]
+    JobID.map((JobID)=>{
+        departmentList.push(JobID.Job_Department)
+        
+    })
+    
+    const skillList=[]
+    SkillID.map((SkillID)=>{
+        skillList.push(SkillID.Skill_ID)
+        
+    })
+   
+    
+
+    return (
+        <>
+        <p><b><u>Delete Course Assignment</u></b></p>
+        <form>
+ 
+
+        Skills ID:
+        <select 
+        onChange={(event) => handleInput3(event.target.value)}>
+            <option>Select</option>
+           {skillList.map((skill)=>
+           <option value = {skill} >{skill}</option>
+           )}
+        </select>
+
+        Course ID:
+        <select 
+        onChange={(event) => handleInput1(event.target.value)}>
+        <option>Select</option>
+           {IDList.map((ID)=>
+           <option value = {ID} >{ID}</option>
+           )}
+        </select>
+
+             <button type="submit" value="Submit" onClick={handleSubmit}>Delete Assign</button>
+
+
+        </form>
+        </>
+            
+    )
+}
 
    
