@@ -847,3 +847,95 @@ def test_update_jobrole_7():
         ]
     }
 
+# Delete 
+def test_delete_jobrole_1():
+    """Happy path
+    """
+    test_setup = client.post(
+        "/jobroles/create",
+        json = {
+            "Job_Role_ID": "JR88",
+            "Job_Role_Name": "Test Job Role 88",
+            "Job_Department": "Chairman",
+            "Active": 1
+        }
+    )
+
+    response = client.get("/jobroles/delete/hard/S88")
+    assert response.status_code == 200
+    assert response.json() == {}
+
+def test_delete_skill_2():
+    """Error: Job Role ID does not exist
+    """
+    response = client.get("/jobroles/delete/hard/JR99")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+                {
+                    "Error_ID": "S1",
+                    "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                    "Error_Details": ""
+                }
+            ]
+        }
+
+def test_delete_skill_3():
+    """Valid Skill ID: First Letter Lowercase JR
+    """
+    test_setup = client.post(
+        "/jobroles/create",
+        json = {
+            "Job_Role_ID": "JR88",
+            "Job_Role_Name": "Test Job Role 88",
+            "Job_Department": "Chairman",
+            "Active": 1
+        }
+    )
+
+    response = client.get("/jobroles/delete/hard/jr88")
+    assert response.status_code == 200
+    assert response.json() == {}
+
+def test_delete_skill_4():
+    """Error: Invalid Skill ID - First Letters not JS
+    """
+    response = client.get("skills/delete/hard/JS11")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+            {
+                "Error_ID": "S1",
+                "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                "Error_Details": ""
+            },
+            {
+                "Error_ID": "S3",
+                "Error_Desc": "This skill has an invalid skill ID. Check your skill ID and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+
+def test_delete_skill_5():
+    """Error: Valid Skill ID: Identifying section not numbers
+    """
+    response = client.get("skills/delete/hard/JSTUV")
+    assert response.status_code == 200
+    assert response.json() == {
+        "errors": [
+            {
+                "Error_ID": "S1",
+                "Error_Desc": "The skill you're looking for is not inside our database. Check your search terms and try again.",
+                "Error_Details": ""
+            },
+            {
+                "Error_ID": "S3",
+                "Error_Desc": "This skill has an invalid skill ID. Check your skill ID and try again.",
+                "Error_Details": ""
+            }
+        ]
+    }
+
+

@@ -21,7 +21,6 @@ skill_course = APIRouter()
 @skill_course.get(
     "/skill_courses",
     tags=["skill_courses"],
-    response_model=List[Skill_course],
     description="Get a list of all skill course relationships.",
 )
 def get_all_skill_course():
@@ -34,8 +33,8 @@ def get_all_skill_course():
     description="Create a new skill course relationship.",
 )
 def create_skill_course(skill_course: Skill_course):
-    skill_course.Skill_ID = skill_course.Skill_ID.capitalize()
-    skill_course.Course_ID = skill_course.Course_ID.capitalize()
+    skill_course.Skill_ID = skill_course.Skill_ID.upper()
+    skill_course.Course_ID = skill_course.Course_ID.upper()
 
     # Error handling:
     search_course_ID = skill_course.Course_ID
@@ -66,7 +65,7 @@ def create_skill_course(skill_course: Skill_course):
 )
 def get_course_skill(search_course_ID: str):
     # Error handling
-    search_course_ID = search_course_ID.capitalize()
+    search_course_ID = search_course_ID.upper()
     errors = [
         course_error1(search_course_ID), 
         course_error2(search_course_ID)
@@ -173,8 +172,8 @@ def delete_skill_course(skill_course: Skill_course):
 # def delete_skillcourse_softrestore(skill_course: Skill_course):
 
 #     # Error handling
-#     search_course_ID = skill_course.Course_ID.capitalize()
-#     search_skill_ID = skill_course.Skill_ID.capitalize()
+#     search_course_ID = skill_course.Course_ID.upper()
+#     search_skill_ID = skill_course.Skill_ID.upper()
 #     skill_course.Active = 1
 
 #     errors = [

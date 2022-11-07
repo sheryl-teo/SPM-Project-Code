@@ -126,8 +126,6 @@ def test_create_skill_4():
         }
     ]
     
-
-
 def test_create_skill_5():
     """Error: Valid Skill ID: Identifying section not numbers
     """

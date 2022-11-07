@@ -7,6 +7,19 @@ from sqlalchemy import func, select, text
 
 staff = APIRouter()
 
+def error_1(Staff_ID: str):
+    len_check = len(str(Staff_ID)) == 6
+    if len_check == False: 
+        error_msg = {
+            'Error_ID': 'S1', 
+            'Error_Desc': '''This staff has an invalid staff ID. Check your staff ID and try again.''',
+            'Error_Details': ''
+        }
+    else: 
+        error_msg = None
+    
+    return error_msg 
+
 @staff.get(
     "/staffs/get_all_staff",
     tags=["staffs"],

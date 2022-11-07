@@ -145,7 +145,7 @@ def create_jobrole(job: Job_role):
     search_jobrole_ID = job.Job_Role_ID
     search_jobrole_name = job.Job_Role_Name
     search_jobrole_dept = job.Job_Department
-
+    
     errors = [error_2(search_jobrole_ID), error_3(search_jobrole_ID), error_4(search_jobrole_name), error_5(search_jobrole_name), error_6(search_jobrole_dept)]
     errors_list = [e for e in errors if e != None]
 

@@ -32,7 +32,7 @@ def get_all_job_role_skill():
     tags=["job_role_skill"],
     description="Create a new job role skill relationship.",
 )
-async def create_job_role_skill(job_role_skill: Job_role_skill):
+def create_job_role_skill(job_role_skill: Job_role_skill):
     # Error handling: 
     search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
     search_skill_ID = job_role_skill.Skill_ID.upper()
@@ -110,7 +110,7 @@ def get_skill_jobrole(search_jobrole_ID: str):
 )
 def get_job_role_skill(search_skill: str):
     # Error handling
-    search_skill = search_skill.capitalize()
+    search_skill = search_skill.upper()
     errors = [skill_error1(search_skill), skill_error3(search_skill)]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
@@ -130,8 +130,8 @@ def get_job_role_skill(search_skill: str):
 def update_soft_delete(job_role_skill: Job_role_skill):
 
     # Error handling: 
-    search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
-    search_skill_ID = job_role_skill.Skill_ID.capitalize()
+    search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
+    search_skill_ID = job_role_skill.Skill_ID.upper()
     job_role_skill.Active = 0
 
     errors = [
@@ -160,8 +160,8 @@ def update_soft_delete(job_role_skill: Job_role_skill):
     
 
 #     # Error handling: 
-#     search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
-#     search_skill_ID = job_role_skill.Skill_ID.capitalize()
+#     search_jobrole_ID = job_role_skill.Job_Role_ID.upper()
+#     search_skill_ID = job_role_skill.Skill_ID.upper()
 #     job_role_skill.Active = 1
 
 #     errors = [
@@ -179,24 +179,29 @@ def update_soft_delete(job_role_skill: Job_role_skill):
 #     else:
 #         return {'errors': errors_list}
 
-# # Hard delete
-# @job_role_skill.post(
-#     "/job_role_skills/delete/hard",
-#     tags=["skills"],
-#     description="Hard delete job role skill relationship.",
-# )
-# async def update_hard_delete(job_role_skill: dict):
-#     job_role_skill['Job_Role_ID'] = job_role_skill['Job_Role_ID'].upper()
-#     job_role_skill['Skill_ID'] = job_role_skill['Skill_ID'].upper()
+# Hard delete
+@job_role_skill.post(
+    "/job_role_skills/delete/hard",
+    tags=["job_role_skill"],
+    description="Hard delete job role skill relationship.",
+)
 
-#     # Error handling: 
-#     search_jobrole_ID = job_role_skill['Job_Role_ID']
-#     search_skill_ID = job_role_skill['Skill_ID']
+def update_hard_delete(job_role_skill: dict):
+    job_role_skill['Job_Role_ID'] = job_role_skill['Job_Role_ID'].upper()
+    job_role_skill['Skill_ID'] = job_role_skill['Skill_ID'].upper()
 
-#     errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID), skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
-#     errors_list = [e for e in errors if e != None]
-#     if len(errors_list) == 0:
-#         statement = job_role_skills.delete().where(job_role_skills.c.Skill_ID==job_role_skill['Skill_ID'] & job_role_skills.c.Job_Role_ID==job_role_skill['Job_Role_ID'])
-#         conn.execute(statement)
-#     else:
-#         return {'errors': errors_list}
+    # Error handling: 
+    search_jobrole_ID = job_role_skill['Job_Role_ID']
+    search_skill_ID = job_role_skill['Skill_ID']
+
+    errors = [jobrole_error1(search_jobrole_ID), jobrole_error3(search_jobrole_ID), skill_error1(search_skill_ID), skill_error3(search_skill_ID)]
+    errors_list = [e for e in errors if e != None]
+    if len(errors_list) == 0:
+        statement = job_role_skills.delete().where((job_role_skills.c.Skill_ID==job_role_skill['Skill_ID']) & (job_role_skills.c.Job_Role_ID==job_role_skill['Job_Role_ID']))
+        conn.execute(statement)
+        return conn.execute(job_role_skills.select().where(
+            (job_role_skills.c.Job_Role_ID == search_jobrole_ID) & 
+            (job_role_skills.c.Skill_ID == search_skill_ID))
+            ).fetchall()
+    else:
+        return {'errors': errors_list}
