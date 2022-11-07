@@ -36,7 +36,8 @@ def can_convert_to_int(string: str):
         return False
 
 def error_2(search_Course_ID: str):
-    letter_check = search_Course_ID[0:2] == 'COR'
+    course_prefixes = ['COR', 'FIN', 'MGT', 'SAL', 'tch']
+    letter_check = search_Course_ID[0:3].lower in [c.lower() for c in course_prefixes]
     int_check = can_convert_to_int(search_Course_ID[3:])
     if letter_check == False or int_check == False:
         error_msg = {
