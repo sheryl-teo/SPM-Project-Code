@@ -53,4 +53,9 @@ If you encounter any error after running this code, do check your directory
 
 6.  ![image](https://user-images.githubusercontent.com/65134007/200111788-2e2a6295-24fa-422d-a03f-762bfe27950b.png)
 
+# Error
+![image](https://user-images.githubusercontent.com/65134007/200350943-c2be380f-a514-4178-b493-9bc92175d987.png)
+
+1. If you experience a CORS error , do download the plugin using this link, 'https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en' 
+
 
