@@ -1,5 +1,6 @@
+
 from fastapi import APIRouter
-from config.db import conn
+from config.db import conn, session
 from schemas.job_role import Job_role
 from models.job_role import job_roles
 from schemas.job_role_skill import Job_role_skill
@@ -8,6 +9,7 @@ from schemas.learning_journey import Learning_journey
 from models.learning_journey import learning_journeys
 from typing import List
 from sqlalchemy import func, select
+from sqlalchemy.sql import text
 
 job_role = APIRouter()
 
@@ -127,7 +129,6 @@ def error_6(search_jobrole_dept: str):
 @job_role.get(
     "/jobroles/",
     tags=["job_roles"],
-    response_model=List[Job_role],
     description="Get a list of all job roles details",
 )
 def get_all_jobrole():
