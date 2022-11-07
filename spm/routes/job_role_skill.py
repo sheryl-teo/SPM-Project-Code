@@ -41,8 +41,11 @@ async def create_job_role_skill(job_role_skill: Job_role_skill):
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         # Create job role skill
-        statement = job_role_skills.insert([job_role_skill])
-        conn.execute(statement)
+        conn.execute(job_role_skills.insert().values(
+            Job_Role_ID = search_jobrole_ID,
+            Skill_ID = search_skill_ID,
+            Active = 1
+        ))
         # Return created job role skill
         return conn.execute(job_role_skills.select().where(
             (job_role_skills.c.Job_Role_ID == search_jobrole_ID) & 

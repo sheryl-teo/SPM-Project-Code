@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter
 from config.db import conn, session
 from schemas.job_role import Job_role

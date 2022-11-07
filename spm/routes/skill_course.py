@@ -45,8 +45,11 @@ def create_skill_course(skill_course: Skill_course):
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
         # Create skill course
-        statement = skill_courses.insert([skill_course])
-        conn.execute(statement)
+        conn.execute(skill_courses.insert().values(
+            Course_ID = search_course_ID,
+            Skill_ID = search_skill_ID,
+            Active = 1
+        ))
         # Return created skill course
         return conn.execute(skill_courses.select().where(
             (skill_courses.c.Skill_ID == search_skill_ID) & 
