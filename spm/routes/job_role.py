@@ -56,8 +56,6 @@ def can_convert_to_int(string: str):
 
 def error_3(search_jobrole_ID: str):
     letter_check = search_jobrole_ID[:2] == 'JR'
-    print(search_jobrole_ID[:2])
-    print('letter_check', letter_check)
     int_check = can_convert_to_int(search_jobrole_ID[2:])
     if letter_check == False or int_check == False:
         error_msg = {
@@ -106,7 +104,7 @@ def error_6(search_jobrole_dept: str):
     is_substring_error = True
     error_msg = {
         'Error_ID': 'JR6', 
-        'Error_Desc': '''This job role department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
+        'Error_Desc': '''This job department is not valid (Chairman, CEO, Sales, Ops, HR, Finance). Check your job department and try again.''',
         'Error_Details': ''
     }
 
@@ -149,7 +147,7 @@ def get_all_jobrole():
     description="Create a job role",
 )
 def create_jobrole(job: Job_role):
-    job.Job_Role_ID = job.Job_Role_ID.capitalize()
+    job.Job_Role_ID = job.Job_Role_ID.upper()
     search_jobrole_ID = job.Job_Role_ID
     search_jobrole_name = job.Job_Role_Name
     search_jobrole_dept = job.Job_Department
@@ -159,7 +157,7 @@ def create_jobrole(job: Job_role):
 
     if len(errors_list) == 0:
         conn.execute(job_roles.insert().values(
-            Job_Role_ID = job.Job_Role_ID.capitalize(),
+            Job_Role_ID = job.Job_Role_ID.upper(),
             Job_Role_Name = job.Job_Role_Name,
             Job_Department = job.Job_Department,
             Active = job.Active
