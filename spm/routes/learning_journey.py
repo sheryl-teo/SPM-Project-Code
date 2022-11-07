@@ -56,6 +56,10 @@ def create_learning_journey(clj: dict):
     job_role_id = clj['Job_Role_ID']
     skill_list = clj['skill_list']
     course_list = clj['course_list']
+
+    # Error handling
+    learning_journey_id = learning_journey_id.upper()
+    # return learning_journey_id
     # create row in learning journey table
     conn.execute(learning_journeys.insert().values(
         Learning_Journey_ID = learning_journey_id,

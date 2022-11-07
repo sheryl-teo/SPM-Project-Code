@@ -123,7 +123,7 @@ def get_job_role_skill(search_skill: str):
 
 # Soft delete 
 @job_role_skill.post(
-    "/job_role_skills/delete/soft",
+    "/job_role_skills/delete",
     tags=["job_role_skill"],
     description="Soft delete job role skill relationship.",
 )
@@ -142,42 +142,42 @@ def update_soft_delete(job_role_skill: Job_role_skill):
         ]
     errors_list = [e for e in errors if e != None]
     if len(errors_list) == 0:
-        statement = job_role_skills.update().where(
+        statement = job_role_skills.delete().where(
             (job_role_skills.c.Skill_ID==job_role_skill.Skill_ID) & 
             (job_role_skills.c.Job_Role_ID==job_role_skill.Job_Role_ID)
-            ).values(Active=job_role_skill.Active)
+            )
         conn.execute(statement)
     else:
         return {'errors': errors_list}
 
-# Soft undelete 
-@job_role_skill.post(
-    "/job_role_skills/delete/softrestore",
-    tags=["job_role_skill"],
-    description="Soft undelete job role skill relationship.",
-)
-def delete_jobrole_softrestore(job_role_skill: Job_role_skill):
+# # Soft undelete 
+# @job_role_skill.post(
+#     "/job_role_skills/delete/softrestore",
+#     tags=["job_role_skill"],
+#     description="Soft undelete job role skill relationship.",
+# )
+# def delete_jobrole_softrestore(job_role_skill: Job_role_skill):
     
 
-    # Error handling: 
-    search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
-    search_skill_ID = job_role_skill.Skill_ID.capitalize()
-    job_role_skill.Active = 1
+#     # Error handling: 
+#     search_jobrole_ID = job_role_skill.Job_Role_ID.capitalize()
+#     search_skill_ID = job_role_skill.Skill_ID.capitalize()
+#     job_role_skill.Active = 1
 
-    errors = [
-        jobrole_error1(search_jobrole_ID), 
-        jobrole_error3(search_jobrole_ID), 
-        skill_error1(search_skill_ID), 
-        skill_error3(search_skill_ID)]
-    errors_list = [e for e in errors if e != None]
-    if len(errors_list) == 0:
-        statement = job_role_skills.update().where(
-            (job_role_skills.c.Skill_ID==job_role_skill.Skill_ID) & 
-            (job_role_skills.c.Job_Role_ID==job_role_skill.Job_Role_ID)
-            ).values(Active=job_role_skill.Active)
-        conn.execute(statement)
-    else:
-        return {'errors': errors_list}
+#     errors = [
+#         jobrole_error1(search_jobrole_ID), 
+#         jobrole_error3(search_jobrole_ID), 
+#         skill_error1(search_skill_ID), 
+#         skill_error3(search_skill_ID)]
+#     errors_list = [e for e in errors if e != None]
+#     if len(errors_list) == 0:
+#         statement = job_role_skills.update().where(
+#             (job_role_skills.c.Skill_ID==job_role_skill.Skill_ID) & 
+#             (job_role_skills.c.Job_Role_ID==job_role_skill.Job_Role_ID)
+#             ).values(Active=job_role_skill.Active)
+#         conn.execute(statement)
+#     else:
+#         return {'errors': errors_list}
 
 # Hard delete
 @job_role_skill.post(
